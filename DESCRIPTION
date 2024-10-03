@@ -1,0 +1,17 @@
+Package: power
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person("Jörg", "Sesterhenn", , "joerg.sesterhenn@gmail.com", role = c("aut", "cre"))
+Description: Plot power input and output.
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    anytime,
+    dplyr,
+    ggplot2,
+    gridExtra,
+    lubridate,
+    readr

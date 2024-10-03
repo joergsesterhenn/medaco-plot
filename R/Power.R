@@ -9,3 +9,4 @@ plot_heatmap(power_data)
 plot_ridgeline(power_data)
 plot_stacked_area(power_data)
 plot_line_chart(power_data)
+

@@ -18,5 +18,5 @@ read_power_data <- function(data_path) {
   # fix datetime
   df$timestamp <- parse_datetime(df$timestamp,format="%d.%m.%Y %H:%M")
 
-  return(df)
+  return(subset(df, select = c("timestamp","INPUT","OUTPUT") ))
 }

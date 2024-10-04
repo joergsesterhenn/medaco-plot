@@ -12,7 +12,8 @@ read_power_data <- function(data_path) {
     skip=6,
     id = "origin_file",
     col_names = c("timestamp", "INPUT", "C","OUTPUT","E"),
-    col_select =c("timestamp","INPUT", "OUTPUT")
+    col_select =c("timestamp","INPUT", "OUTPUT"),
+    show_col_types = FALSE
   )
 
   # fix datetime

@@ -23,7 +23,7 @@ RUN apt-get update && \
 ## renv.lock file
 COPY ./renv.lock ./renv.lock
 ## app folder
-COPY ./ ./app
+COPY ./R ./app
 
 # install renv & restore packages
 RUN Rscript -e 'install.packages("renv")'

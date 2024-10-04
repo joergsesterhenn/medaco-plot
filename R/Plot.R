@@ -14,7 +14,8 @@ plot_aggregated_by_month <- function(df) {
     group_by(year_month) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   # Reshape the data into long format for easy plotting of both INPUT and OUTPUT
@@ -42,7 +43,8 @@ plot_aggregated_by_hour <- function(df) {
     group_by(hour) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   # Reshape the data into long format for easy plotting of both INPUT and OUTPUT
@@ -73,7 +75,8 @@ plot_by_hour_and_month <- function (df) {
     group_by(month, hour) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   # Reshape the data into long format for easy plotting of both INPUT and OUTPUT
@@ -103,7 +106,8 @@ plot_heatmap <- function(df) {
     group_by(month, hour) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   hourly_monthly_data_long <- hourly_monthly_data %>%
@@ -164,7 +168,8 @@ plot_stacked_area <- function(df) {
     group_by(month, hour) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   hourly_monthly_data_long <- hourly_monthly_data %>%
@@ -193,7 +198,8 @@ plot_line_chart <- function(df) {
     group_by(month, hour) %>%
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
-      total_output = sum(OUTPUT, na.rm = TRUE)
+      total_output = sum(OUTPUT, na.rm = TRUE),
+      .groups = "drop"  # Drop the grouping to avoid issues with subsequent operations
     )
 
   hourly_monthly_data_long <- hourly_monthly_data %>%

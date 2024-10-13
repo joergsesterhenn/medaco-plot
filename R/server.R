@@ -1,29 +1,5 @@
 library(shiny)
-library(ggplot2)
-library(ggridges)
-library(dplyr)
-library(tidyr)
-library(viridis)
 library(shinyFiles)
-
-
-# Shiny App
-ui <- fluidPage(
-  titlePanel("Power Input and Output Analysis of medaco data"),
-
-  sidebarLayout(
-    sidebarPanel(width = 0),
-    mainPanel(
-      shinyDirButton("directory", "Select Folder", "Please select a folder"),
-      selectInput("plot_type",
-                  label = "Select Plot Type",
-                  choices = c("Line Chart", "Heatmap", "Ridgeline Plot", "Stacked Area Chart", "By hour and month", "By month", "By hour"),
-                  selected = "Line Chart"),
-      plotOutput("plot",fill = TRUE, height = "700px"),
-      width = "90%"
-    )
-  )
-)
 
 server <- function(input, output, session) {
   source("Read.R", local = TRUE)
@@ -69,6 +45,3 @@ server <- function(input, output, session) {
     }
   })
 }
-
-# Run the application
-shinyApp(ui = ui, server = server)

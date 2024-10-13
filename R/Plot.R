@@ -3,6 +3,7 @@ library(ggridges)
 library(dplyr)
 library(lubridate)
 library(tidyr)
+library(viridis)
 
 
 plot_aggregated_by_month <- function(df) {

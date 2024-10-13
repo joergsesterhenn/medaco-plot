@@ -4,6 +4,7 @@ library(dplyr)
 library(lubridate)
 library(tidyr)
 library(viridis)
+library(purrr)
 
 
 plot_aggregated_by_month <- function(df) {
@@ -219,21 +220,19 @@ plot_line_chart <- function(df) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
-plot <- function(plot_type, data){
-  if (plot_type == "Line Chart") {
-    plot_line_chart(data())
-  } else if (plot_type == "Heatmap") {
-    plot_heatmap(data())
-  } else if (plot_type == "Ridgeline Plot") {
-    plot_ridgeline(data())
-  } else if (plot_type == "Stacked Area Chart") {
-    plot_stacked_area(data())
-  } else if (plot_type == "By month") {
-    plot_aggregated_by_month(data())
-  } else if (plot_type == "By hour") {
-    plot_aggregated_by_hour(data())
-  } else if (plot_type == "By hour and month") {
-    plot_by_hour_and_month(data())
-  }
-}
+plot_map <- data.frame(
+  map=c(
+    "by month" = "plot_aggregated_by_month",
+    "by hour" = "plot_aggregated_by_hour",
+    "by hour and month"= "plot_by_hour_and_month",
+    "heatmap"="plot_heatmap",
+    "line chart"="plot_line_chart",
+    "ridgeline" = "plot_ridgeline",
+    "stacked area" = "plot_stacked_area"
+    )
+  )
 
+plot <- function(plot_type, data){
+  function_name = plot_map[plot_type,"map"]
+  get(function_name)(data)
+}

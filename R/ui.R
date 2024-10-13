@@ -8,7 +8,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(width = 0),
     mainPanel(
-      shinyDirButton("directory", "Select Folder", "Please select a folder"),
+      shinyDirButton("directory", "Select Folder", "Please select folder containing data"),
       selectInput("plot_type",
                   label = "Select Plot Type",
                   choices = c("Line Chart", "Heatmap", "Ridgeline Plot", "Stacked Area Chart", "By hour and month", "By month", "By hour"),

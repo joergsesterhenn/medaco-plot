@@ -122,13 +122,7 @@ get_hourly_data_in_long_format <- function(df){
       .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
     )
 
-  # Reshape the data into long format
-  hourly_data_long <- hourly_data %>%
-    pivot_longer(cols = c(total_input, total_output),
-                 names_to = "type",
-                 values_to = "value")
-
-  return(hourly_data_long)
+  return(pivot_longer_data(hourly_data))
 }
 
 
@@ -145,13 +139,7 @@ get_monthly_data_in_long_format <- function(df){
       .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
     )
 
-  # Reshape the data into long format for easy plotting of both INPUT and OUTPUT
-  monthly_data_long <- monthly_data %>%
-    pivot_longer(cols = c(total_input, total_output),
-                 names_to = "type",
-                 values_to = "value")
-
-  return(monthly_data_long)
+  return(pivot_longer_data(monthly_data))
 }
 
 get_hourly_monthly_data_in_long_format <- function (df){
@@ -168,14 +156,15 @@ get_hourly_monthly_data_in_long_format <- function (df){
       .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
     )
 
+  return(pivot_longer_data(hourly_monthly_data))
+}
+pivot_longer_data <- function(df){
   # Reshape data into long format
-  hourly_monthly_data_long <- hourly_monthly_data %>%
+  return (df %>%
     pivot_longer(cols = c(total_input, total_output),
                  names_to = "type",
-                 values_to = "value")
-  return(hourly_monthly_data_long)
+                 values_to = "value"))
 }
-
 
 plot_map <- data.frame(
   map = c(

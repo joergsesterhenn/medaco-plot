@@ -8,16 +8,20 @@ library(purrr)
 
 
 plot_aggregated_by_month <- function(df) {
-  monthly_data_long <- get_monthly_data_in_long_format(df)
+  monthly_data_long <- get_monthly_data_long(df)
 
   # Plot the data as bars
   ggplot(monthly_data_long, aes(x = year_month, y = value, fill = type)) +
     geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Monthly Input and Output Sums",
-         x = "Month",
-         y = "Sum of Values") +
+    labs(
+      title = "Monthly Input and Output Sums",
+      x = "Month",
+      y = "Sum of Values"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_manual(values = c("total_input" = "blue", "total_output" = "red"))
+    scale_fill_manual(
+      values = c("total_input" = "blue", "total_output" = "red")
+    )
 }
 
 plot_aggregated_by_hour <- function(df) {
@@ -26,91 +30,116 @@ plot_aggregated_by_hour <- function(df) {
   # Plot the data as bars
   ggplot(hourly_data_long, aes(x = hour, y = value, fill = type)) +
     geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Hourly Input and Output Sums",
-         x = "Hour",
-         y = "Sum of Values") +
+    labs(
+      title = "Hourly Input and Output Sums",
+      x = "Hour",
+      y = "Sum of Values"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_manual(values = c("total_input" = "blue", "total_output" = "red"))
+    scale_fill_manual(
+      values = c("total_input" = "blue", "total_output" = "red")
+    )
 }
 
-
-
 plot_by_hour_and_month <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_in_long_format(df)
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
   # Plot the data as bars with facets for each month
   ggplot(hourly_monthly_data_long, aes(x = hour, y = value, fill = type)) +
     geom_bar(stat = "identity", position = "dodge") +
-    facet_wrap(~month, ncol = 3) + # Create separate plots for each month
-    labs(title = "Hourly Input and Output Sums by Month",
-         x = "Hour",
-         y = "Sum of Values") +
+    facet_wrap(~month, ncol = 3) +
+    labs(
+      title = "Hourly Input and Output Sums by Month",
+      x = "Hour",
+      y = "Sum of Values"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_manual(values = c("total_input" = "blue", "total_output" = "red"))
+    scale_fill_manual(
+      values = c("total_input" = "blue", "total_output" = "red")
+    )
 }
 
-
 plot_heatmap <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_in_long_format(df)
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
   # Heatmap
-  ggplot(hourly_monthly_data_long, aes(x = hour, y = month, fill = value)) +
+  ggplot(
+    hourly_monthly_data_long, aes(x = hour, y = month, fill = value)
+  ) +
     geom_tile() +
-    facet_wrap(~type, ncol = 1) + # Separate panels for INPUT and OUTPUT
+    facet_wrap(~type, ncol = 1) +
     scale_fill_gradient(low = "white", high = "blue") +
-    labs(title = "Heatmap of Hourly Input and Output by Month",
-         x = "Hour",
-         y = "Month",
-         fill = "Sum of Values") +
+    labs(
+      title = "Heatmap of Hourly Input and Output by Month",
+      x = "Hour",
+      y = "Month",
+      fill = "Sum of Values"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
 plot_ridgeline <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_in_long_format(df)
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
   # Ridgeline plot
-  ggplot(hourly_monthly_data_long, aes(x = as.numeric(hour), y = month, height = value, fill = type)) +
-    geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) + # Adjust 'scale' for better height separation
-    facet_wrap(~type, ncol = 1) + # Separate panels for INPUT and OUTPUT
-    labs(title = "Ridgeline Plot of Hourly Input and Output by Month",
-         x = "Hour",
-         y = "Month") +
+  ggplot(
+    hourly_monthly_data_long,
+    aes(x = as.numeric(hour), y = month, height = value, fill = type)
+  ) +
+    geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) +
+    # Adjust 'scale' for better height separation
+    facet_wrap(~type, ncol = 1) +
+    labs(
+      title = "Ridgeline Plot of Hourly Input and Output by Month",
+      x = "Hour",
+      y = "Month"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_manual(values = c("total_input" = "blue", "total_output" = "red"))
+    scale_fill_manual(
+      values = c("total_input" = "blue", "total_output" = "red")
+    )
 }
 
-
 plot_stacked_area <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_in_long_format(df)
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
   # Stacked area chart
-  ggplot(hourly_monthly_data_long, aes(x = hour, y = value, fill = month, group = month)) +
+  ggplot(
+    hourly_monthly_data_long,
+    aes(x = hour, y = value, fill = month, group = month)
+  ) +
     geom_area(position = "stack", alpha = 0.8) +
-    facet_wrap(~type, ncol = 1) + # Separate panels for INPUT and OUTPUT
-    labs(title = "Stacked Area Chart of Hourly Input and Output by Month",
-         x = "Hour",
-         y = "Sum of Values") +
+    facet_wrap(~type, ncol = 1) +
+    # Separate panels for INPUT and OUTPUT
+    labs(
+      title = "Stacked Area Chart of Hourly Input and Output by Month",
+      x = "Hour",
+      y = "Sum of Values"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     scale_fill_viridis_d() # Use a color gradient to distinguish months
 }
 
-
 plot_line_chart <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_in_long_format(df)
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
   # Line plot
-  ggplot(hourly_monthly_data_long, aes(x = hour, y = value, color = month, group = month)) +
+  ggplot(
+    hourly_monthly_data_long,
+    aes(x = hour, y = value, color = month, group = month)
+  ) +
     geom_line() +
-    facet_wrap(~type, ncol = 1) + # Separate panels for INPUT and OUTPUT
-    labs(title = "Hourly Input and Output by Month",
-         x = "Hour",
-         y = "Sum of Values",
-         color = "Month") +
+    facet_wrap(~type, ncol = 1) +
+    labs(
+      title = "Hourly Input and Output by Month",
+      x = "Hour",
+      y = "Sum of Values",
+      color = "Month"
+    ) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
-get_hourly_data_in_long_format <- function(df){
-  # Create a new column for the year-month to aggregate by month
+get_hourly_data_in_long_format <- function(df) {
   df$hour <- format(df$timestamp, "%H")
 
   # Summing INPUT and OUTPUT values for each month
@@ -119,15 +148,13 @@ get_hourly_data_in_long_format <- function(df){
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
       total_output = sum(OUTPUT, na.rm = TRUE),
-      .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
+      .groups = "drop"
     )
 
   return(pivot_longer_data(hourly_data))
 }
 
-
-get_monthly_data_in_long_format <- function(df){
-  # Create a new column for the year-month to aggregate by month
+get_monthly_data_long <- function(df) {
   df$year_month <- format(df$timestamp, "%Y-%m")
 
   # Summing INPUT and OUTPUT values for each month
@@ -136,13 +163,13 @@ get_monthly_data_in_long_format <- function(df){
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
       total_output = sum(OUTPUT, na.rm = TRUE),
-      .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
+      .groups = "drop"
     )
 
   return(pivot_longer_data(monthly_data))
 }
 
-get_hourly_monthly_data_in_long_format <- function (df){
+get_hourly_monthly_data_long <- function(df) {
   # Data preprocessing
   df$hour <- format(df$timestamp, "%H")
   df$month <- format(df$timestamp, "%Y-%m")
@@ -153,17 +180,20 @@ get_hourly_monthly_data_in_long_format <- function (df){
     summarise(
       total_input = sum(INPUT, na.rm = TRUE),
       total_output = sum(OUTPUT, na.rm = TRUE),
-      .groups = "drop" # Drop the grouping to avoid issues with subsequent operations
+      .groups = "drop"
     )
 
   return(pivot_longer_data(hourly_monthly_data))
 }
-pivot_longer_data <- function(df){
+
+pivot_longer_data <- function(df) {
   # Reshape data into long format
-  return (df %>%
-    pivot_longer(cols = c(total_input, total_output),
-                 names_to = "type",
-                 values_to = "value"))
+  return(df %>%
+    pivot_longer(
+      cols = c(total_input, total_output),
+      names_to = "type",
+      values_to = "value"
+    ))
 }
 
 plot_map <- data.frame(
@@ -179,6 +209,6 @@ plot_map <- data.frame(
 )
 
 plot <- function(plot_type, data) {
-  function_name = plot_map[plot_type, "map"]
+  function_name <- plot_map[plot_type, "map"]
   get(function_name)(data)
 }

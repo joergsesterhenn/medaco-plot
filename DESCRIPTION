@@ -1,5 +1,5 @@
 Package: power
-Title: What the Package Does (One Line, Title Case)
+Title: Renders plots of medaco csv data.
 Version: 0.0.0.9000
 Authors@R: 
     person("Jörg", "Sesterhenn", , "joerg.sesterhenn@gmail.com", role = c("aut", "cre"))

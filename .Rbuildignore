@@ -1,4 +1,9 @@
 ^renv$
 ^renv\.lock$
-^power\.Rproj$
+^medacoPlot\.Rproj$
 ^\.Rproj\.user$
+^.github$
+^.vscode$
+^data\$
+^docs\$
+^Dockerfile\$

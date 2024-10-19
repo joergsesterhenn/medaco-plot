@@ -1,7 +1,6 @@
 library(shiny)
 library(shinyFiles)
 
-source("./Plot.R", local = TRUE)
 # Shiny App
 ui <- fluidPage(
   titlePanel("Power Input and Output Analysis of medaco data"),
@@ -14,8 +13,7 @@ ui <- fluidPage(
       ),
       selectInput("plot_type",
         label = "Select Plot Type",
-        choices = row.names(plot_map),
-        selected = row.names(plot_map)[1]
+        choices = ""
       ),
       width = 10
     ),

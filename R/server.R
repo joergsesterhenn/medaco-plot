@@ -2,8 +2,8 @@ library(shiny)
 library(shinyFiles)
 
 server <- function(input, output, session) {
-  source("./Read.R", local = TRUE)
-  source("./Plot.R", local = TRUE)
+  source("read.R", local = TRUE)
+  source("plot.R", local = TRUE)
   roots <- c(
     win = "C:/", # Root directory for Windows
     lin = "/", # Root directory for Linux
@@ -34,4 +34,10 @@ server <- function(input, output, session) {
     req(data())
     plot(input$plot_type, data())
   })
+
+  updateSelectInput(
+    session = session,
+    inputId = "plot_type",
+    choices = row.names(plot_map)
+  )
 }

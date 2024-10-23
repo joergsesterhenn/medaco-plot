@@ -4,6 +4,7 @@
 ^\.Rproj\.user$
 ^.github$
 ^.vscode$
-^data\$
-^docs\$
-^Dockerfile\$
+^data$
+^docs$
+^Dockerfile$
+^LICENSE\.md$

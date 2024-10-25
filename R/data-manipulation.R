@@ -5,7 +5,7 @@ library(tidyr)
 utils::globalVariables(c("%>%"))
 
 # gets hourly data in long format
-get_hourly_data_in_long_format <- function(df) {
+get_hourly_data_long <- function(df) {
   df$hour <- format(df$timestamp, "%H")
 
   # Summing INPUT and OUTPUT values for each month
@@ -56,10 +56,12 @@ get_hourly_monthly_data_long <- function(df) {
 
 # pivots data so that there is a separate row for input and output
 pivot_longer_data <- function(df) {
-  return(df %>%
+  return(
     tidyr::pivot_longer(
-      cols = c(.data$total_input, .data$total_output),
+      data = df,
+      cols = c("total_input", "total_output"),
       names_to = "type",
       values_to = "value"
-    ))
+    )
+  )
 }

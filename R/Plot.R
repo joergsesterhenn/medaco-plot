@@ -48,7 +48,7 @@ plot_aggregated_by_month <- function(df) {
 
 #' @importFrom rlang .data
 plot_aggregated_by_hour <- function(df) {
-  hourly_data_long <- get_hourly_data_in_long_format(df)
+  hourly_data_long <- get_hourly_data_long(df)
 
   # Plot the data as bars
   ggplot2::ggplot(

@@ -1,15 +1,14 @@
 library(dplyr)
 
-
-formated_sequence_of_ten_days <- format(
-  sequence_of_ten_days,
-  format = "%m-%d-%Y %H:%M"
-)
-
 sequence_of_ten_days <- seq(
   as.POSIXct("2000-01-01 01:00:00"),
   as.POSIXct("2000-01-10 01:00:00"),
   by = "days"
+)
+
+formated_sequence_of_ten_days <- format(
+  sequence_of_ten_days,
+  format = "%m-%d-%Y %H:%M"
 )
 
 input_for_testing <- data.frame(

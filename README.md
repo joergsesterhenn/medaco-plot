@@ -1,5 +1,7 @@
 # Medaco Plot
 
+[![codecov](https://codecov.io/github/joergsesterhenn/medaco-plot/graph/badge.svg?token=YGPULT58WZ)](https://codecov.io/github/joergsesterhenn/medaco-plot)
+
 Moderne Smartmeter stellen Einspeise- und Lieferdaten meist über Onlineportale bereit.
 Zusätzlich gibt es diese auch als Rohdaten auch in CSV-Form.
 

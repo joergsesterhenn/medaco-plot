@@ -19,7 +19,6 @@ read_power_data <- function(data_path) {
   df <- readr::read_csv2(
     power_data_files,
     skip = 6,
-    id = "origin_file",
     col_names = c("timestamp", "INPUT", "C", "OUTPUT", "E"),
     col_select = c("timestamp", "INPUT", "OUTPUT"),
     show_col_types = FALSE
@@ -28,5 +27,5 @@ read_power_data <- function(data_path) {
   # fix datetime
   df$timestamp <- readr::parse_datetime(df$timestamp, format = "%d.%m.%Y %H:%M")
 
-  return(subset(df, select = c("timestamp", "INPUT", "OUTPUT")))
+  return(df)
 }

@@ -1,13 +1,19 @@
 library(readr)
 
+get_files_in_path <- function(data_path) {
+  return(
+    list.files(
+      path = data_path, recursive = FALSE,
+      pattern = "\\.CSV$",
+      full.names = TRUE
+    )
+  )
+}
+
 # reads power data from data_path
 read_power_data <- function(data_path) {
   # collect all datafiles
-  power_data_files <- list.files(
-    path = data_path, recursive = FALSE,
-    pattern = "\\.CSV$",
-    full.names = TRUE
-  )
+  power_data_files <- get_files_in_path(data_path)
 
   # read to memory
   df <- readr::read_csv2(

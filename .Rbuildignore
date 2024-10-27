@@ -6,6 +6,7 @@
 ^.vscode$
 ^data$
 ^docs$
+^images$
 ^Dockerfile$
 ^LICENSE\.md$
 ^_pkgdown\.yml$

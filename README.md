@@ -26,4 +26,4 @@ docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 ghcr.io/joergseste
 
 # Vorschau
 
-![Screenshot](https://github.com/joergsesterhenn/medaco-plot/blob/main/docs/plot.png)
+![Screenshot](https://github.com/joergsesterhenn/medaco-plot/blob/main/images/plot.png)

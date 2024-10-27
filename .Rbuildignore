@@ -8,3 +8,6 @@
 ^docs$
 ^Dockerfile$
 ^LICENSE\.md$
+^_pkgdown\.yml$
+^pkgdown$
+^\.github$

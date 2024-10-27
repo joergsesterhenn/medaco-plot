@@ -4,10 +4,10 @@
 \alias{pivot_longer_data}
 \title{Pivot Data to Long Format for Input and Output}
 \usage{
-pivot_longer_data(df)
+pivot_longer_data(power_data)
 }
 \arguments{
-\item{df}{A data frame containing \code{total_input} and \code{total_output} columns.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A data frame in long format with a \code{type} column indicating input or
@@ -18,5 +18,13 @@ Transforms data from a wide format to a long format, creating separate rows
 for \code{total_input} and \code{total_output}.
 }
 \examples{
-pivot_longer_data(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  total_input = c(1.0, 2.0),
+  total_output = c(3.0, 2.0)
+)
+pivot_longer_data(power_data)
 }

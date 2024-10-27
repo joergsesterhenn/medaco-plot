@@ -4,10 +4,10 @@
 \alias{plot_line_chart}
 \title{Generate a Line Chart of Hourly Data by Month}
 \usage{
-plot_line_chart(df)
+plot_line_chart(power_data)
 }
 \arguments{
-\item{df}{Data frame containing hourly data by month in long format.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A ggplot object with a line chart.
@@ -16,5 +16,13 @@ A ggplot object with a line chart.
 Creates a line chart to show input/output data by hour for each month.
 }
 \examples{
-plot_line_chart(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0),
+  OUTPUT = c(3.0, 2.0)
+)
+plot_line_chart(power_data)
 }

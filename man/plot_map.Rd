@@ -9,12 +9,9 @@ A data frame with dropdown items as row names and plot function
 names as column values.
 }
 \usage{
-data(plot_map)
+plot_map
 }
 \description{
 A data frame mapping dropdown box items to corresponding plot functions.
-}
-\examples{
-plot_map["by month", ]
 }
 \keyword{datasets}

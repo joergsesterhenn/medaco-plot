@@ -4,10 +4,10 @@
 \alias{plot_aggregated_by_month}
 \title{Plot Aggregated Data by Month}
 \usage{
-plot_aggregated_by_month(df)
+plot_aggregated_by_month(power_data)
 }
 \arguments{
-\item{df}{Data frame containing monthly data in long format.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A ggplot object showing monthly aggregated values.
@@ -16,5 +16,13 @@ A ggplot object showing monthly aggregated values.
 Generates a bar plot showing monthly input and output sums.
 }
 \examples{
-plot_aggregated_by_month(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0),
+  OUTPUT = c(3.0, 2.0)
+)
+plot_aggregated_by_month(power_data)
 }

@@ -1,5 +1,6 @@
 library(ggplot2)
 library(ggridges)
+library(scales, warn.conflicts = FALSE)
 
 #' Map of Dropdown Items to Plot Functions
 #'
@@ -7,11 +8,9 @@ library(ggridges)
 #'
 #' @format A data frame with dropdown items as row names and plot function
 #' names as column values.
-#' @usage data(plot_map)
-#' @examples
-#' plot_map["by month", ]
 plot_map <- data.frame(
   map = c(
+    "by year" = "plot_aggregated_by_year",
     "by month" = "plot_aggregated_by_month",
     "by hour" = "plot_aggregated_by_hour",
     "by hour and month" = "plot_by_hour_and_month",
@@ -24,16 +23,25 @@ plot_map <- data.frame(
 
 #' Generic Plot Function
 #'
-#' Selects a plot function based on the specified plot type and dataset.
+#' Selects a plot function based on the specified type and plots the dataset.
 #'
 #' @param plot_type Character, the plot type from the dropdown menu.
-#' @param data Data frame containing data for plotting.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object created by the appropriate plotting function.
 #' @examples
-#' plot("by month", data)
-plot <- function(plot_type, data) {
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot("by month", power_data)
+#' @export
+plot <- function(plot_type, power_data) {
   function_name <- plot_map[plot_type, "map"]
-  get(function_name)(data)
+  get(function_name)(power_data)
 }
 
 ##################################################
@@ -41,19 +49,69 @@ plot <- function(plot_type, data) {
 # to the list above to have them appear in the ui
 ##################################################
 
+#' Plot Aggregated Data by Year
+#'
+#' Generates a bar plot showing yearly input and output sums.
+#'
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @return A ggplot object showing yearly aggregated values.
+#' @importFrom rlang .data
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_aggregated_by_year(power_data)
+#' @export
+plot_aggregated_by_year <- function(power_data) {
+  yearly_data_long <- get_yearly_data_long(power_data)
+  ggplot2::ggplot(
+    yearly_data_long,
+    ggplot2::aes(x = .data$year, y = .data$value, fill = .data$type)
+  ) +
+    ggplot2::geom_bar(stat = "identity", position = "dodge") +
+    ggplot2::labs(
+      title = "Yearly Input and Output Sums (kWh)",
+      x = "Year",
+      y = "Sum of Values"
+    ) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::scale_fill_manual(
+      values = c("INPUT" = "blue", "OUTPUT" = "red")
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(label = round(.data$value, digits = 0)),
+      vjust = 1.5,
+      position = ggplot2::position_dodge(.9),
+      colour = "white",
+      fontface = 2
+    )
+}
+
 #' Plot Aggregated Data by Month
 #'
 #' Generates a bar plot showing monthly input and output sums.
 #'
-#' @param df Data frame containing monthly data in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object showing monthly aggregated values.
 #' @importFrom rlang .data
 #' @examples
-#' plot_aggregated_by_month(df)
-plot_aggregated_by_month <- function(df) {
-  monthly_data_long <- get_monthly_data_long(df)
-
-  # Plot the data as bars
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_aggregated_by_month(power_data)
+#' @export
+plot_aggregated_by_month <- function(power_data) {
+  monthly_data_long <- get_monthly_data_long(power_data)
   ggplot2::ggplot(
     monthly_data_long,
     ggplot2::aes(x = .data$year_month, y = .data$value, fill = .data$type)
@@ -66,7 +124,7 @@ plot_aggregated_by_month <- function(df) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("INPUT" = "blue", "OUTPUT" = "red")
     )
 }
 
@@ -74,15 +132,22 @@ plot_aggregated_by_month <- function(df) {
 #'
 #' Generates a bar plot showing hourly input and output sums.
 #'
-#' @param df Data frame containing hourly data in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object showing hourly aggregated values.
 #' @importFrom rlang .data
 #' @examples
-#' plot_aggregated_by_hour(df)
-plot_aggregated_by_hour <- function(df) {
-  hourly_data_long <- get_hourly_data_long(df)
-
-  # Plot the data as bars
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_aggregated_by_hour(power_data)
+#' @export
+plot_aggregated_by_hour <- function(power_data) {
+  hourly_data_long <- get_hourly_data_long(power_data)
   ggplot2::ggplot(
     hourly_data_long,
     ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
@@ -95,7 +160,7 @@ plot_aggregated_by_hour <- function(df) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("INPUT" = "blue", "OUTPUT" = "red")
     )
 }
 
@@ -103,15 +168,22 @@ plot_aggregated_by_hour <- function(df) {
 #'
 #' Generates a bar plot showing hourly input and output sums by month.
 #'
-#' @param df Data frame containing hourly data by month in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object showing hourly values by month in facets.
 #' @importFrom rlang .data
 #' @examples
-#' plot_by_hour_and_month(df)
-plot_by_hour_and_month <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
-
-  # Plot the data as bars with facets for each month
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_by_hour_and_month(power_data)
+#' @export
+plot_by_hour_and_month <- function(power_data) {
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
   ggplot2::ggplot(
     hourly_monthly_data_long,
     ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
@@ -125,7 +197,7 @@ plot_by_hour_and_month <- function(df) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("INPUT" = "blue", "OUTPUT" = "red")
     )
 }
 
@@ -133,15 +205,22 @@ plot_by_hour_and_month <- function(df) {
 #'
 #' Creates a heatmap to show hourly input and output data across months.
 #'
-#' @param df Data frame containing hourly data by month in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object with a heatmap representing input/output.
 #' @importFrom rlang .data
 #' @examples
-#' plot_heatmap(df)
-plot_heatmap <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
-
-  # Heatmap
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_heatmap(power_data)
+#' @export
+plot_heatmap <- function(power_data) {
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
   ggplot2::ggplot(
     hourly_monthly_data_long,
     ggplot2::aes(x = .data$hour, y = .data$month, fill = .data$value)
@@ -162,15 +241,22 @@ plot_heatmap <- function(df) {
 #'
 #' Creates a ridgeline plot to show distribution of input/output data by month.
 #'
-#' @param df Data frame containing hourly data by month in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object with a ridgeline plot.
 #' @importFrom rlang .data
 #' @examples
-#' plot_ridgeline(df)
-plot_ridgeline <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
-
-  # Ridgeline plot
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_ridgeline(power_data)
+#' @export
+plot_ridgeline <- function(power_data) {
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
   ggplot2::ggplot(
     hourly_monthly_data_long,
     ggplot2::aes(
@@ -181,7 +267,6 @@ plot_ridgeline <- function(df) {
     )
   ) +
     ggridges::geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) +
-    # Adjust 'scale' for better height separation
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
       title = "Ridgeline Plot of Hourly Input and Output by Month",
@@ -190,7 +275,7 @@ plot_ridgeline <- function(df) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("INPUT" = "blue", "OUTPUT" = "red")
     )
 }
 
@@ -198,15 +283,22 @@ plot_ridgeline <- function(df) {
 #'
 #' Creates a stacked area chart to visualize input/output data by month.
 #'
-#' @param df Data frame containing hourly data by month in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object with a stacked area chart.
 #' @importFrom rlang .data
 #' @examples
-#' plot_stacked_area(df)
-plot_stacked_area <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
-
-  # Stacked area chart
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_stacked_area(power_data)
+#' @export
+plot_stacked_area <- function(power_data) {
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
   ggplot2::ggplot(
     hourly_monthly_data_long,
     ggplot2::aes(
@@ -218,7 +310,6 @@ plot_stacked_area <- function(df) {
   ) +
     ggplot2::geom_area(position = "stack", alpha = 0.8) +
     ggplot2::facet_wrap(~type, ncol = 1) +
-    # Separate panels for INPUT and OUTPUT
     ggplot2::labs(
       title = "Stacked Area Chart of Hourly Input and Output by Month",
       x = "Hour",
@@ -232,15 +323,22 @@ plot_stacked_area <- function(df) {
 #'
 #' Creates a line chart to show input/output data by hour for each month.
 #'
-#' @param df Data frame containing hourly data by month in long format.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
 #' @examples
-#' plot_line_chart(df)
-plot_line_chart <- function(df) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
-
-  # Line plot
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0),
+#'   OUTPUT = c(3.0, 2.0)
+#' )
+#' plot_line_chart(power_data)
+#' @export
+plot_line_chart <- function(power_data) {
+  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
   ggplot2::ggplot(
     hourly_monthly_data_long,
     ggplot2::aes(

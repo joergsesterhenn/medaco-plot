@@ -4,10 +4,10 @@
 \alias{get_monthly_data_long}
 \title{Get Monthly Data in Long Format}
 \usage{
-get_monthly_data_long(df)
+get_monthly_data_long(power_data)
 }
 \arguments{
-\item{df}{A data frame containing \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A data frame with monthly \code{total_input} and \code{total_output} values.
@@ -16,5 +16,13 @@ A data frame with monthly \code{total_input} and \code{total_output} values.
 Aggregates and reshapes the data by month, returning it in a long format.
 }
 \examples{
-get_monthly_data_long(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0),
+  OUTPUT = c(3.0, 2.0)
+)
+get_monthly_data_long(power_data)
 }

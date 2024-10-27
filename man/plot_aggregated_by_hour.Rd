@@ -4,10 +4,10 @@
 \alias{plot_aggregated_by_hour}
 \title{Plot Aggregated Data by Hour}
 \usage{
-plot_aggregated_by_hour(df)
+plot_aggregated_by_hour(power_data)
 }
 \arguments{
-\item{df}{Data frame containing hourly data in long format.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A ggplot object showing hourly aggregated values.
@@ -16,5 +16,13 @@ A ggplot object showing hourly aggregated values.
 Generates a bar plot showing hourly input and output sums.
 }
 \examples{
-plot_aggregated_by_hour(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0),
+  OUTPUT = c(3.0, 2.0)
+)
+plot_aggregated_by_hour(power_data)
 }

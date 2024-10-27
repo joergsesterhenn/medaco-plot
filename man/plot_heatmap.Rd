@@ -4,10 +4,10 @@
 \alias{plot_heatmap}
 \title{Generate a Heatmap of Hourly Data by Month}
 \usage{
-plot_heatmap(df)
+plot_heatmap(power_data)
 }
 \arguments{
-\item{df}{Data frame containing hourly data by month in long format.}
+\item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 }
 \value{
 A ggplot object with a heatmap representing input/output.
@@ -16,5 +16,13 @@ A ggplot object with a heatmap representing input/output.
 Creates a heatmap to show hourly input and output data across months.
 }
 \examples{
-plot_heatmap(df)
+# Example using a small sample data frame
+power_data <- data.frame(
+  timestamp = c(
+       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0),
+  OUTPUT = c(3.0, 2.0)
+)
+plot_heatmap(power_data)
 }

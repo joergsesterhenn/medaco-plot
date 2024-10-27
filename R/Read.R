@@ -8,6 +8,7 @@ library(readr)
 #' @return A character vector of file paths for `.CSV` files in the directory.
 #' @examples
 #' get_files_in_path("data/")
+#' @export
 get_files_in_path <- function(data_path) {
   return(
     list.files(
@@ -31,6 +32,7 @@ get_files_in_path <- function(data_path) {
 #' @importFrom readr read_delim locale
 #' @examples
 #' read_power_data("data/")
+#' @export
 read_power_data <- function(data_path) {
   # collect all datafiles
   power_data_files <- get_files_in_path(data_path)

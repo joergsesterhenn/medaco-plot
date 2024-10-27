@@ -1,5 +1,13 @@
 library(readr)
 
+#' Get List of Files in Directory
+#'
+#' Retrieves a list of all `.CSV` files in the specified directory.
+#'
+#' @param data_path Character string specifying the directory path to search.
+#' @return A character vector of file paths for `.CSV` files in the directory.
+#' @examples
+#' get_files_in_path("data/")
 get_files_in_path <- function(data_path) {
   return(
     list.files(
@@ -10,7 +18,19 @@ get_files_in_path <- function(data_path) {
   )
 }
 
-# reads power data from data_path
+#' Read Power Data
+#'
+#' Reads power data from `.CSV` files in the specified directory,
+#' selecting specific columns and using a custom locale for decimal
+#' and grouping marks.
+#'
+#' @param data_path Character string specifying the directory containing
+#' `.CSV` files to read.
+#' @return A data frame containing timestamp, input, and output columns
+#' from the files.
+#' @importFrom readr read_delim locale
+#' @examples
+#' read_power_data("data/")
 read_power_data <- function(data_path) {
   # collect all datafiles
   power_data_files <- get_files_in_path(data_path)

@@ -1,7 +1,15 @@
 library(ggplot2)
 library(ggridges)
 
-# map of dropdownbox items mapped to plot functions
+#' Map of Dropdown Items to Plot Functions
+#'
+#' A data frame mapping dropdown box items to corresponding plot functions.
+#'
+#' @format A data frame with dropdown items as row names and plot function
+#' names as column values.
+#' @usage data(plot_map)
+#' @examples
+#' plot_map["by month", ]
 plot_map <- data.frame(
   map = c(
     "by month" = "plot_aggregated_by_month",
@@ -14,7 +22,15 @@ plot_map <- data.frame(
   )
 )
 
-# generic plot function based on plot_map
+#' Generic Plot Function
+#'
+#' Selects a plot function based on the specified plot type and dataset.
+#'
+#' @param plot_type Character, the plot type from the dropdown menu.
+#' @param data Data frame containing data for plotting.
+#' @return A ggplot object created by the appropriate plotting function.
+#' @examples
+#' plot("by month", data)
 plot <- function(plot_type, data) {
   function_name <- plot_map[plot_type, "map"]
   get(function_name)(data)
@@ -25,7 +41,15 @@ plot <- function(plot_type, data) {
 # to the list above to have them appear in the ui
 ##################################################
 
+#' Plot Aggregated Data by Month
+#'
+#' Generates a bar plot showing monthly input and output sums.
+#'
+#' @param df Data frame containing monthly data in long format.
+#' @return A ggplot object showing monthly aggregated values.
 #' @importFrom rlang .data
+#' @examples
+#' plot_aggregated_by_month(df)
 plot_aggregated_by_month <- function(df) {
   monthly_data_long <- get_monthly_data_long(df)
 
@@ -46,7 +70,15 @@ plot_aggregated_by_month <- function(df) {
     )
 }
 
+#' Plot Aggregated Data by Hour
+#'
+#' Generates a bar plot showing hourly input and output sums.
+#'
+#' @param df Data frame containing hourly data in long format.
+#' @return A ggplot object showing hourly aggregated values.
 #' @importFrom rlang .data
+#' @examples
+#' plot_aggregated_by_hour(df)
 plot_aggregated_by_hour <- function(df) {
   hourly_data_long <- get_hourly_data_long(df)
 
@@ -67,7 +99,15 @@ plot_aggregated_by_hour <- function(df) {
     )
 }
 
+#' Plot Hourly Data by Month
+#'
+#' Generates a bar plot showing hourly input and output sums by month.
+#'
+#' @param df Data frame containing hourly data by month in long format.
+#' @return A ggplot object showing hourly values by month in facets.
 #' @importFrom rlang .data
+#' @examples
+#' plot_by_hour_and_month(df)
 plot_by_hour_and_month <- function(df) {
   hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
@@ -89,7 +129,15 @@ plot_by_hour_and_month <- function(df) {
     )
 }
 
+#' Generate a Heatmap of Hourly Data by Month
+#'
+#' Creates a heatmap to show hourly input and output data across months.
+#'
+#' @param df Data frame containing hourly data by month in long format.
+#' @return A ggplot object with a heatmap representing input/output.
 #' @importFrom rlang .data
+#' @examples
+#' plot_heatmap(df)
 plot_heatmap <- function(df) {
   hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
@@ -110,7 +158,15 @@ plot_heatmap <- function(df) {
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
 
+#' Generate a Ridgeline Plot of Hourly Data by Month
+#'
+#' Creates a ridgeline plot to show distribution of input/output data by month.
+#'
+#' @param df Data frame containing hourly data by month in long format.
+#' @return A ggplot object with a ridgeline plot.
 #' @importFrom rlang .data
+#' @examples
+#' plot_ridgeline(df)
 plot_ridgeline <- function(df) {
   hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
@@ -138,7 +194,15 @@ plot_ridgeline <- function(df) {
     )
 }
 
+#' Generate a Stacked Area Chart of Hourly Data by Month
+#'
+#' Creates a stacked area chart to visualize input/output data by month.
+#'
+#' @param df Data frame containing hourly data by month in long format.
+#' @return A ggplot object with a stacked area chart.
 #' @importFrom rlang .data
+#' @examples
+#' plot_stacked_area(df)
 plot_stacked_area <- function(df) {
   hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 
@@ -164,7 +228,15 @@ plot_stacked_area <- function(df) {
     ggplot2::scale_fill_viridis_d() # Use a color gradient to distinguish months
 }
 
+#' Generate a Line Chart of Hourly Data by Month
+#'
+#' Creates a line chart to show input/output data by hour for each month.
+#'
+#' @param df Data frame containing hourly data by month in long format.
+#' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
+#' @examples
+#' plot_line_chart(df)
 plot_line_chart <- function(df) {
   hourly_monthly_data_long <- get_hourly_monthly_data_long(df)
 

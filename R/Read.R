@@ -15,17 +15,20 @@ read_power_data <- function(data_path) {
   # collect all datafiles
   power_data_files <- get_files_in_path(data_path)
 
-  # read to memory
-  df <- readr::read_csv2(
-    power_data_files,
-    skip = 6,
-    col_names = c("timestamp", "INPUT", "C", "OUTPUT", "E"),
-    col_select = c("timestamp", "INPUT", "OUTPUT"),
-    show_col_types = FALSE
+  return(
+    readr::read_delim(
+      file = power_data_files,
+      delim = ";",
+      skip = 6,
+      locale = readr::locale(decimal_mark = ",", grouping_mark = "."),
+      col_names = c("timestamp", "INPUT", "C", "OUTPUT", "E"),
+      col_select = c("timestamp", "INPUT", "OUTPUT"),
+      col_types = readr::cols(
+        "timestamp" = readr::col_datetime(format = "%d.%m.%Y %H:%M"),
+        "INPUT" = readr::col_double(),
+        "OUTPUT" = readr::col_double()
+      ),
+      show_col_types = FALSE
+    )
   )
-
-  # fix datetime
-  df$timestamp <- readr::parse_datetime(df$timestamp, format = "%d.%m.%Y %H:%M")
-
-  return(df)
 }

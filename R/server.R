@@ -6,8 +6,8 @@ server <- function(input, output, session) {
   source("plot.R", local = TRUE)
   source("data-manipulation.R", local = TRUE)
   roots <- c(
-    win = "C:/", # Root directory for Windows
-    lin = "/", # Root directory for Linux
+    windows = "C:/", # Root directory for Windows
+    linux = "/", # Root directory for Linux
     home = "~" # Root directory for Home
   )
   # Enable shinyFiles to interact with the file system
@@ -18,16 +18,18 @@ server <- function(input, output, session) {
     defaultRoot = "home",
     allowDirCreate = FALSE
   )
-  # Reactive expression to read CSV files from the selected folder
+  # Reactive expression to read CSV files from the selected directory
   data <- shiny::reactive({
-    shiny::req(input$directory)
-
     # Get the selected directory path
-    folder_path <- shinyFiles::parseDirPath(roots = roots, input$directory)
+    shiny::req(input$directory)
+    selected_directory <- shinyFiles::parseDirPath(
+      roots = roots,
+      input$directory
+    )
 
-    # Read and combine CSV files from the folder
-    shiny::req(folder_path)
-    return(read_power_data(folder_path))
+    # Read and combine CSV files from the selected directory
+    shiny::req(selected_directory)
+    return(read_power_data(selected_directory))
   })
 
   # Reactive plot output based on user selection

@@ -14,8 +14,11 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     libcurl4-openssl-dev \
     libssl-dev \
     libharfbuzz-dev \
-    libfribidi-dev
-
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev 
 
 ## update system libraries
 RUN apt-get update && \

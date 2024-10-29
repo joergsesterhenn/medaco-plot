@@ -224,8 +224,8 @@ plot_by_hour_and_month <- function(power_data) {
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
 #'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'        as.POSIXct("2000-02-01 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 01:00:00", tz = "UTC")),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )

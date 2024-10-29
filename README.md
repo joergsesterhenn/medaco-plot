@@ -1,11 +1,11 @@
-# Medaco Plot
+# medacoPlot
 
 [![codecov](https://codecov.io/github/joergsesterhenn/medaco-plot/graph/badge.svg?token=YGPULT58WZ)](https://codecov.io/github/joergsesterhenn/medaco-plot)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-Moderne Smartmeter stellen Einspeise- und Lieferdaten meist über Onlineportale bereit.
-Zusätzlich gibt es diese auch als Rohdaten auch in CSV-Form.
-
-Diese App erlaubt es die in einem Ordner abgelegten CSV Dateien zu visualisieren.
+Moderne Smartmeter stellen Einspeise- und Lieferdaten über Onlineportale bereit.
+Zusätzlich gibt es die Rohdaten auch in CSV-Form.
+Die App medacoPlot erlaubt es diese in einem Ordner abgelegten CSV Dateien zu visualisieren.
 
 # Image bauen
 ```

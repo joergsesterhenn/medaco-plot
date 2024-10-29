@@ -9,6 +9,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: 
+      image: ghcr.io/joergsesterhenn/medaco-plot:main
 
     steps:
       - name: Checkout repository
@@ -22,7 +24,6 @@ jobs:
           r-version: '4.4.1'  # Specify your desired R version
 
       - name: Restore renv environment
-        uses: docker://ghcr.io/joergsesterhenn/medaco-plot:main
         run: |
           Rscript -e "install.packages('renv')"  
           Rscript -e "renv::restore()"

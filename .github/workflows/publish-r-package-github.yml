@@ -62,15 +62,6 @@ jobs:
           echo "Package version is $version"
           echo "::set-output name=version::$version"
 
-      - name: Tag the release
-        id: tag_release
-        run: |
-          # Get the version from the previous step
-          version="${{ steps.get_version.outputs.version }}"
-          # Create the tag
-          git tag "v$version"
-          git push origin "v$version"  # Push the tag to the repository
-
       - name: Update NEWS.md
         if: steps.changelog.outputs.messages  # Only run if there are new messages
         run: |
@@ -88,6 +79,16 @@ jobs:
           else
             echo "No changes to NEWS.md, skipping commit."
           fi
+
+      - name: Tag the release
+        id: tag_release
+        run: |
+          # Get the version from the previous step
+          version="${{ steps.get_version.outputs.version }}"
+          # Create the tag
+          git tag "v$version"
+          git push origin "v$version"  # Push the tag to the repository
+
 
       - name: Build and check package
         run: |

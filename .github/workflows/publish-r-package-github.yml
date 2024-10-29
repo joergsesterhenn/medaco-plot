@@ -21,12 +21,10 @@ jobs:
         with:
           r-version: '4.4.1'  # Specify your desired R version
 
-      - name: Install dependencies for renv
-        run: |
-          Rscript -e "install.packages('renv')"
-
       - name: Restore renv environment
+        uses: docker://ghcr.io/joergsesterhenn/medaco-plot:main
         run: |
+          Rscript -e "install.packages('renv')"  
           Rscript -e "renv::restore()"
 
       - name: Ensure NEWS.md exists

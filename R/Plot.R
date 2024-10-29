@@ -33,9 +33,11 @@ plot_map <- data.frame(
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot("by month", power_data)
 #' @export
@@ -61,9 +63,11 @@ plot <- function(plot_type, power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_aggregated_by_year(power_data)
 #' @export
@@ -81,7 +85,7 @@ plot_aggregated_by_year <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("INPUT" = "blue", "OUTPUT" = "red")
+      values = c("total_input" = "blue", "total_output" = "red")
     ) +
     ggplot2::geom_text(
       ggplot2::aes(label = round(.data$value, digits = 0)),
@@ -104,9 +108,11 @@ plot_aggregated_by_year <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_aggregated_by_month(power_data)
 #' @export
@@ -124,7 +130,7 @@ plot_aggregated_by_month <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("INPUT" = "blue", "OUTPUT" = "red")
+      values = c("total_input" = "blue", "total_output" = "red")
     )
 }
 
@@ -140,9 +146,11 @@ plot_aggregated_by_month <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_aggregated_by_hour(power_data)
 #' @export
@@ -160,7 +168,7 @@ plot_aggregated_by_hour <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("INPUT" = "blue", "OUTPUT" = "red")
+      values = c("total_input" = "blue", "total_output" = "red")
     )
 }
 
@@ -176,9 +184,11 @@ plot_aggregated_by_hour <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_by_hour_and_month(power_data)
 #' @export
@@ -197,7 +207,7 @@ plot_by_hour_and_month <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("INPUT" = "blue", "OUTPUT" = "red")
+      values = c("total_input" = "blue", "total_output" = "red")
     )
 }
 
@@ -213,9 +223,11 @@ plot_by_hour_and_month <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_heatmap(power_data)
 #' @export
@@ -249,9 +261,11 @@ plot_heatmap <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_ridgeline(power_data)
 #' @export
@@ -275,7 +289,7 @@ plot_ridgeline <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("INPUT" = "blue", "OUTPUT" = "red")
+      values = c("total_input" = "blue", "total_output" = "red")
     )
 }
 
@@ -291,9 +305,11 @@ plot_ridgeline <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_stacked_area(power_data)
 #' @export
@@ -331,9 +347,11 @@ plot_stacked_area <- function(power_data) {
 #' power_data <- data.frame(
 #'   timestamp = c(
 #'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-#'   INPUT = c(1.0, 2.0),
-#'   OUTPUT = c(3.0, 2.0)
+#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
 #' plot_line_chart(power_data)
 #' @export

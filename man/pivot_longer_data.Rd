@@ -22,9 +22,11 @@ for \code{total_input} and \code{total_output}.
 power_data <- data.frame(
   timestamp = c(
        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-  total_input = c(1.0, 2.0),
-  total_output = c(3.0, 2.0)
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+       as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+  total_input = c(1.0, 2.0, 3.0, 4.0),
+  total_output = c(4.0, 3.0, 2.0, 1.0)
 )
 pivot_longer_data(power_data)
 }

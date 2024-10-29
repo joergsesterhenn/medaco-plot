@@ -20,9 +20,11 @@ Creates a line chart to show input/output data by hour for each month.
 power_data <- data.frame(
   timestamp = c(
        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-       as.POSIXct("2000-01-02 01:00:00", tz = "UTC")),
-  INPUT = c(1.0, 2.0),
-  OUTPUT = c(3.0, 2.0)
+       as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+       as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+       as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+  INPUT = c(1.0, 2.0, 3.0, 4.0),
+  OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 )
 plot_line_chart(power_data)
 }

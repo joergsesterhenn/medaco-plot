@@ -41,14 +41,9 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install pak
+      - name: Install Rcpp separately
         run: |
-          Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/dev/')"
-  
-      - name: Install Rcpp
-        run: |
-          Rscript -e "pak::pkg_install('Rcpp')"
-          Rscript -e "pak::lockfile_install('.github/pkg.lock')"
+          Rscript -e "install.packages('Rcpp', repos = 'https://cran.rstudio.com/')"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

@@ -43,7 +43,7 @@ jobs:
 
       - name: Install Rcpp separately
         run: |
-          Rscript -e "install.packages('Rcpp', repos = 'https://cran.rstudio.com/', type = 'binary')"
+          Rscript -e "install.packages('Rcpp', repos = 'https://cran.rstudio.com/', version = '1.0.12', type = 'binary')"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

@@ -41,6 +41,11 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install Rcpp separately
+        run: |
+          Rscript -e "pak::pkg_install('Rcpp')"
+          Rscript -e "pak::lockfile_install('.github/pkg.lock')"
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck

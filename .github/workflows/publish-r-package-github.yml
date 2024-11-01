@@ -9,8 +9,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 
-      image: ghcr.io/joergsesterhenn/medaco-plot:main
 
     steps:
       - name: Checkout repository

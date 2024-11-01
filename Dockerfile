@@ -18,7 +18,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     libfreetype6-dev \
     libpng-dev \
     libtiff5-dev \
-    libjpeg-dev 
+    libjpeg-dev \
+    git
 
 ## update system libraries
 RUN apt-get update && \

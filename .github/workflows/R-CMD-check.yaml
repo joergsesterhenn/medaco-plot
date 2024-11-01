@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, master]
 
-name: R-CMD-check
+name: R CMD check
 
 permissions: read-all
 
@@ -41,7 +41,11 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install Rcpp separately
+      - name: Install pak
+        run: |
+          Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/dev/')"
+  
+      - name: Install Rcpp
         run: |
           Rscript -e "pak::pkg_install('Rcpp')"
           Rscript -e "pak::lockfile_install('.github/pkg.lock')"

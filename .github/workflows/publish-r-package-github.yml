@@ -1,4 +1,4 @@
-name: Publish R Package to GitHub Packages
+name: publish R package
 
 on:
   workflow_dispatch:  # Allows manual triggering from the GitHub UI
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: ghcr.io/joergsesterhenn/medaco-plot:main
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

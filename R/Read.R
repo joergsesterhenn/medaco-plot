@@ -1,4 +1,4 @@
-library(readr)
+library(readr, warn.conflicts = FALSE)
 
 #' Get List of Files in Directory
 #'

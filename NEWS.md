@@ -1,7 +1,2 @@
-# medacoPlot 0.0.1
+# medacoPlot Changelog
 
-* Initial CRAN submission.
-
-## 2024-11-02 - v0.0.1
-
-- install more stuff

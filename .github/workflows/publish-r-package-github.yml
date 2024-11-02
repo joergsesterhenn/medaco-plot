@@ -34,16 +34,6 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for tags
 
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: '4.4.1'  # Specify your desired R version
-
-      - name: Restore renv environment
-        run: |
-          Rscript -e "install.packages('renv')"  
-          Rscript -e "renv::restore()"
-
       - name: Ensure NEWS.md exists
         run: |
           if [ ! -f NEWS.md ]; then
@@ -77,6 +67,23 @@ jobs:
           echo "Package version is $version"
           echo "::set-output name=version::$version"
 
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4.1'  # Specify your desired R version
+
+      - name: Restore renv environment
+        run: |
+          Rscript -e "install.packages('renv')"
+          Rscript -e "install.packages('devtools')"    
+          Rscript -e "renv::restore()"
+  
+      - name: Build and check package
+        run: |
+          Rscript -e "devtools::install_deps(dependencies = TRUE)"
+          R CMD build .
+          R CMD check *.tar.gz
+  
       - name: Update NEWS.md
         if: steps.changelog.outputs.messages  # Only run if there are new messages
         run: |
@@ -93,6 +100,13 @@ jobs:
             echo "No changes to NEWS.md, skipping commit."
           fi
 
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create the GitHub release
+          gh release create "v${{ steps.get_version.outputs.version }}" --title "Release v${{ steps.get_version.outputs.version }}" *.tar.gz
+
       - name: Tag the release
         id: tag_release
         run: |
@@ -101,17 +115,4 @@ jobs:
           # Create the tag
           git tag "v$version"
           git push origin "v$version"  # Push the tag to the repository
-
-
-      - name: Build and check package
-        run: |
-          Rscript -e "devtools::install_deps(dependencies = TRUE)"
-          R CMD build .
-          R CMD check *.tar.gz
-
-      - name: Publish to GitHub Packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Create the GitHub release
-          gh release create "v${{ steps.get_version.outputs.version }}" --title "Release v${{ steps.get_version.outputs.version }}" *.tar.gz
+  

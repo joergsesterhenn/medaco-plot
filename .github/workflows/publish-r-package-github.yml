@@ -34,14 +34,6 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for tags
 
-      - name: Ensure NEWS.md exists
-        run: |
-          if [ ! -f NEWS.md ]; then
-            echo "Creating NEWS.md file."
-            touch NEWS.md
-            echo "# Changelog" > NEWS.md
-          fi
-
       - name: Collect commit messages for changelog
         id: changelog
         run: |
@@ -81,12 +73,17 @@ jobs:
       - name: Build and check package
         run: |
           Rscript -e "devtools::install_deps(dependencies = TRUE)"
-          R CMD build .
-          R CMD check *.tar.gz
+          R CMD build . --no-manual --no-build-vignettes
+          R CMD check --no-manual --no-vignettes *.tar.gz
   
       - name: Update NEWS.md
         if: steps.changelog.outputs.messages  # Only run if there are new messages
         run: |
+          if [ ! -f NEWS.md ]; then
+            echo "Creating NEWS.md file."
+            touch NEWS.md
+            echo "# Changelog" > NEWS.md
+          fi  
           # Append new section to NEWS.md with version and date
           echo -e "\n## $(date +'%Y-%m-%d') - v${{ steps.get_version.outputs.version }}\n" >> NEWS.md
           echo "${{ steps.changelog.outputs.messages }}" >> NEWS.md

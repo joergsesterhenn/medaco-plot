@@ -1,6 +1,6 @@
 # medacoPlot
 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![r-universe](https://joergsesterhenn.r-universe.dev/badges/medacoPlot)](https://joergsesterhenn.r-universe.dev/medacoPlot)
 [![pkgdown docs](https://github.com/joergsesterhenn/medaco-plot/actions/workflows/pkgdown.yaml/badge.svg)](https://joergsesterhenn.github.io/medaco-plot/)
 [![codecov](https://codecov.io/github/joergsesterhenn/medaco-plot/graph/badge.svg?token=YGPULT58WZ)](https://codecov.io/github/joergsesterhenn/medaco-plot)
 [![OSV-Scanner](https://github.com/joergsesterhenn/medaco-plot/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/joergsesterhenn/medaco-plot/actions/workflows/osv-scanner.yml)

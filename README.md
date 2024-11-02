@@ -11,13 +11,26 @@ Moderne Smartmeter stellen Einspeise- und Lieferdaten über Onlineportale bereit
 Zusätzlich gibt es die Rohdaten auch in CSV-Form.
 Die Shiny app medacoPlot erlaubt es diese in einem Ordner abgelegten CSV Dateien zu visualisieren.
 
-# Image bauen
+# R package 
+
+Das R package medacoPlot exportiert die Methoden zum Einlesen der Daten, zur Datenmanipulation und zum Plotten der Daten. Durch installieren des package können die Funktionen ohne die Shiny App genutzt werden.
+
+```
+install.packages(
+    'medacoPlot', 
+    repos = c(
+        'https://joergsesterhenn.r-universe.dev', 
+        'https://cloud.r-project.org'
+    )
+)
+```
+
+# Docker image bauen
 ```
 docker build -t medaco-plot .
 ```
 
-# Image ausführen
-
+# Docker image ausführen
 Das Verzeichnis mit den csv-Dateien muss in den Container gemounted werden. 
 ```
 docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 medaco-plot

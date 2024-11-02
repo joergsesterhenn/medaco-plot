@@ -12,7 +12,7 @@ library(readr, warn.conflicts = FALSE)
 get_files_in_path <- function(data_path) {
   return(
     list.files(
-      path = data_path, recursive = FALSE,
+      path = data_path, recursive = TRUE,
       pattern = "\\.CSV$",
       full.names = TRUE
     )

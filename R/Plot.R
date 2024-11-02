@@ -1,6 +1,7 @@
 library(ggplot2)
 library(ggridges)
 library(scales, warn.conflicts = FALSE)
+library(dplyr)
 
 #' Map of Dropdown Items to Plot Functions
 #'
@@ -17,7 +18,8 @@ plot_map <- data.frame(
     "heatmap" = "plot_heatmap",
     "line chart" = "plot_line_chart",
     "ridgeline" = "plot_ridgeline",
-    "stacked area" = "plot_stacked_area"
+    "stacked area" = "plot_stacked_area",
+    "top 10" = "plot_top_days"
   )
 )
 
@@ -32,10 +34,11 @@ plot_map <- data.frame(
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -62,10 +65,11 @@ plot <- function(plot_type, power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -107,10 +111,11 @@ plot_aggregated_by_year <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -145,10 +150,11 @@ plot_aggregated_by_month <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -183,10 +189,11 @@ plot_aggregated_by_hour <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -222,10 +229,11 @@ plot_by_hour_and_month <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -260,10 +268,11 @@ plot_heatmap <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 01:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 01:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -304,10 +313,11 @@ plot_ridgeline <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-02-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -346,10 +356,11 @@ plot_stacked_area <- function(power_data) {
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
 #'   timestamp = c(
-#'        as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
-#'        as.POSIXct("2000-01-02 02:00:00", tz = "UTC")),
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 02:00:00", tz = "UTC")
+#'   ),
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
@@ -374,5 +385,48 @@ plot_line_chart <- function(power_data) {
       y = "Sum of Values",
       color = "Month"
     ) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+}
+
+# Function to find and plot top 10 days of power input vs output
+plot_top_days <- function(data_frame) {
+  # Step 1: Aggregate data by day
+  daily_data <- data_frame %>%
+    dplyr::mutate(day = as.Date(timestamp)) %>%
+    dplyr::group_by(.data$day) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE)
+    ) %>%
+    dplyr::ungroup()
+
+  # Step 2: Identify top 10 days for input and output
+  top_input_days <- daily_data %>%
+    dplyr::arrange(dplyr::desc(.data$total_input)) %>%
+    dplyr::slice_head(n = 10) %>%
+    dplyr::mutate(type = "Top Input")
+
+  top_output_days <- daily_data %>%
+    dplyr::arrange(dplyr::desc(.data$total_output)) %>%
+    dplyr::slice_head(n = 10) %>%
+    dplyr::mutate(type = "Top Output")
+
+  # Combine both sets of top days for plotting
+  top_days <- dplyr::bind_rows(top_input_days, top_output_days)
+
+  # Step 3: Plot the data
+  ggplot2::ggplot(top_days, ggplot2::aes(
+    x = reorder(.data$day, .data$total_input),
+    y = .data$total_input,
+    fill = .data$type
+  )) +
+    ggplot2::geom_col(position = "dodge") +
+    ggplot2::labs(
+      title = "Top 10 Days of Power Input vs. Output",
+      x = "Day",
+      y = "Power (kWh)",
+      fill = "Type"
+    ) +
+    ggplot2::theme_minimal() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }

@@ -412,7 +412,7 @@ plot_line_chart <- function(power_data) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_line_chart(power_data)
+#' plot_top_days(power_data)
 #' @export
 plot_top_days <- function(power_data) {
   # Aggregate data by day

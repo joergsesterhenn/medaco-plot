@@ -39,3 +39,10 @@ test_that("ridgeline plot renders as before", {
     plot_ridgeline(input_for_testing)
   )
 })
+
+test_that("top 10 plot renders as before", {
+  vdiffr::expect_doppelganger(
+    "A top 10 plot",
+    plot_top_days(input_for_testing)
+  )
+})

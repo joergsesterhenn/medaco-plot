@@ -399,6 +399,7 @@ plot_line_chart <- function(power_data) {
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
+#' @importFrom stats quantile reorder
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(

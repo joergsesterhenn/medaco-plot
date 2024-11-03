@@ -23,6 +23,9 @@ plot_map <- data.frame(
   )
 )
 
+output_color <- "#add8e6"
+input_color <- "#e97171"
+
 #' Generic Plot Function
 #'
 #' Selects a plot function based on the specified type and plots the dataset.
@@ -89,7 +92,7 @@ plot_aggregated_by_year <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("total_input" = output_color, "total_output" = input_color)
     ) +
     ggplot2::geom_text(
       ggplot2::aes(label = round(.data$value, digits = 0)),
@@ -135,7 +138,7 @@ plot_aggregated_by_month <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("total_input" = output_color, "total_output" = input_color)
     )
 }
 
@@ -174,7 +177,7 @@ plot_aggregated_by_hour <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("total_input" = output_color, "total_output" = input_color)
     )
 }
 
@@ -214,7 +217,7 @@ plot_by_hour_and_month <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("total_input" = output_color, "total_output" = input_color)
     )
 }
 
@@ -298,7 +301,7 @@ plot_ridgeline <- function(power_data) {
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = "blue", "total_output" = "red")
+      values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
 
@@ -388,11 +391,32 @@ plot_line_chart <- function(power_data) {
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
 
-# Function to find and plot top 10 days of power input vs output
-plot_top_days <- function(data_frame) {
-  # Step 1: Aggregate data by day
-  daily_data <- data_frame %>%
-    dplyr::mutate(day = as.Date(timestamp)) %>%
+
+#' Generate a Bar Chart of top 10 days of power input vs output
+#'
+#' Creates a Bar Chart and also displays mean and percentile values.
+#'
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @return A ggplot object with a line chart.
+#' @importFrom rlang .data
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 02:00:00", tz = "UTC")
+#'   ),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' plot_line_chart(power_data)
+#' @export
+plot_top_days <- function(power_data) {
+  # Aggregate data by day
+  daily_data <- power_data %>%
+    dplyr::mutate(day = as.Date(.data$timestamp)) %>%
     dplyr::group_by(.data$day) %>%
     dplyr::summarise(
       total_input = sum(.data$INPUT, na.rm = TRUE),
@@ -400,33 +424,127 @@ plot_top_days <- function(data_frame) {
     ) %>%
     dplyr::ungroup()
 
-  # Step 2: Identify top 10 days for input and output
+  # Identify top 10 days for input and output
   top_input_days <- daily_data %>%
     dplyr::arrange(dplyr::desc(.data$total_input)) %>%
     dplyr::slice_head(n = 10) %>%
-    dplyr::mutate(type = "Top Input")
+    dplyr::mutate(type = "Input", value = .data$total_input)
 
   top_output_days <- daily_data %>%
     dplyr::arrange(dplyr::desc(.data$total_output)) %>%
     dplyr::slice_head(n = 10) %>%
-    dplyr::mutate(type = "Top Output")
+    dplyr::mutate(type = "Output", value = .data$total_output)
 
   # Combine both sets of top days for plotting
   top_days <- dplyr::bind_rows(top_input_days, top_output_days)
 
-  # Step 3: Plot the data
+  # Calculate statistics for input and output separately
+  avg_input <- mean(daily_data$total_input, na.rm = TRUE)
+  avg_output <- mean(daily_data$total_output, na.rm = TRUE)
+  percentile_90_input <- quantile(daily_data$total_input,
+    probs = 0.9,
+    na.rm = TRUE
+  )
+  percentile_90_output <- quantile(daily_data$total_output,
+    probs = 0.9,
+    na.rm = TRUE
+  )
+  percentile_10_input <- quantile(daily_data$total_input,
+    probs = 0.1,
+    na.rm = TRUE
+  )
+  percentile_10_output <- quantile(daily_data$total_output,
+    probs = 0.1,
+    na.rm = TRUE
+  )
+
+  # Plot the data with separate bar graphs for input and output
   ggplot2::ggplot(top_days, ggplot2::aes(
-    x = reorder(.data$day, .data$total_input),
-    y = .data$total_input,
+    x = reorder(.data$day, .data$value),
+    y = .data$value,
     fill = .data$type
   )) +
-    ggplot2::geom_col(position = "dodge") +
+    ggplot2::geom_col() +
+    ggplot2::facet_wrap(~ .data$type, scales = "free_x") +
+    ggplot2::geom_hline(
+      data = top_input_days, 
+      ggplot2::aes(yintercept = avg_input),
+      linetype = "dashed",
+      linewidth = 1
+    ) +
+    ggplot2::geom_hline(
+      data = top_input_days, 
+      ggplot2::aes(yintercept = percentile_90_input),
+      linetype = "dotted",
+      linewidth = 1
+    ) +
+    ggplot2::geom_hline(
+      data = top_input_days, 
+      ggplot2::aes(yintercept = percentile_10_input),
+      linetype = "dotted",
+      linewidth = 1
+    ) +
+    ggplot2::geom_hline(
+      data = top_output_days, 
+      ggplot2::aes(yintercept = avg_output),
+      linetype = "dashed",
+      linewidth = 1
+    ) +
+    ggplot2::geom_hline(
+      data = top_output_days, 
+      ggplot2::aes(yintercept = percentile_90_output),
+      linetype = "dotted",
+      linewidth = 1
+    ) +
+    ggplot2::geom_hline(
+      data = top_output_days, 
+      ggplot2::aes(yintercept = percentile_10_output),
+      linetype = "dotted",
+      linewidth = 1
+    ) +
     ggplot2::labs(
-      title = "Top 10 Days of Power Input vs. Output",
+      title = "Top 10 Days of Power Input and Output",
       x = "Day",
       y = "Power (kWh)",
       fill = "Type"
     ) +
+    ggplot2::geom_text(
+      data = top_input_days,
+      x = 1, y = avg_input, label = "Average",
+      vjust = -1, hjust = 0
+    ) +
+    ggplot2::geom_text(
+      data = top_input_days,
+      x = 1, y = percentile_90_input,
+      label = "90th Percentile",
+      vjust = -1, hjust = 0
+    ) +
+    ggplot2::geom_text(
+      data = top_input_days,
+      x = 1, y = percentile_10_input,
+      label = "10th Percentile",
+      vjust = -1, hjust = 0
+    ) +
+    ggplot2::geom_text(
+      data = top_output_days,
+      x = 1, y = avg_output, label = "Average",
+      vjust = -1, hjust = 0
+    ) +
+    ggplot2::geom_text(
+      data = top_output_days,
+      x = 1, y = percentile_90_output,
+      label = "90th Percentile",
+      vjust = -1, hjust = 0
+    ) +
+    ggplot2::geom_text(
+      data = top_output_days,
+      x = 1, y = percentile_10_output,
+      label = "10th Percentile",
+      vjust = -1, hjust = 0
+    ) +
     ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::scale_fill_manual(
+      values = c(output_color, input_color)
+    )
 }

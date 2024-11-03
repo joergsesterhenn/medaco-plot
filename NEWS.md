@@ -1,5 +1,7 @@
-# Changelog
+# medacoPlot 0.1.0
 
-## 2024-11-02 - v0.0.1
+- add top 10 plot
 
-- ignore generated files
+# medacoPlot 0.0.1
+
+- initial version

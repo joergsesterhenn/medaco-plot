@@ -2,6 +2,9 @@ library(ggplot2)
 library(ggridges)
 library(scales, warn.conflicts = FALSE)
 library(dplyr)
+library(lubridate)
+library(patchwork)
+
 
 #' Map of Dropdown Items to Plot Functions
 #'
@@ -16,6 +19,7 @@ plot_map <- data.frame(
     "by hour" = "plot_aggregated_by_hour",
     "by hour and month" = "plot_by_hour_and_month",
     "heatmap" = "plot_heatmap",
+    "calendar heatmap" = "plot_calendar_heatmap",
     "line chart" = "plot_line_chart",
     "ridgeline" = "plot_ridgeline",
     "stacked area" = "plot_stacked_area",
@@ -468,37 +472,37 @@ plot_top_days <- function(power_data) {
     ggplot2::geom_col() +
     ggplot2::facet_wrap(~ .data$type, scales = "free_x") +
     ggplot2::geom_hline(
-      data = top_input_days, 
+      data = top_input_days,
       ggplot2::aes(yintercept = avg_input),
       linetype = "dashed",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
-      data = top_input_days, 
+      data = top_input_days,
       ggplot2::aes(yintercept = percentile_90_input),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
-      data = top_input_days, 
+      data = top_input_days,
       ggplot2::aes(yintercept = percentile_10_input),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
-      data = top_output_days, 
+      data = top_output_days,
       ggplot2::aes(yintercept = avg_output),
       linetype = "dashed",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
-      data = top_output_days, 
+      data = top_output_days,
       ggplot2::aes(yintercept = percentile_90_output),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
-      data = top_output_days, 
+      data = top_output_days,
       ggplot2::aes(yintercept = percentile_10_output),
       linetype = "dotted",
       linewidth = 1
@@ -548,4 +552,80 @@ plot_top_days <- function(power_data) {
     ggplot2::scale_fill_manual(
       values = c(output_color, input_color)
     )
+}
+
+# Function to create calendar heatmaps for power input and output
+plot_calendar_heatmap <- function(data_frame) {
+  # Aggregate data by day
+  daily_data <- data_frame %>%
+    dplyr::mutate(day = as.Date(.data$timestamp)) %>%
+    dplyr::group_by(.data$day) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE)
+    ) %>%
+    dplyr::ungroup()
+
+  # Add additional columns for calendar layout
+  daily_data <- daily_data %>%
+    dplyr::mutate(
+      month = lubridate::month(.data$day, label = TRUE, abbr = TRUE),
+      week = lubridate::week(.data$day),
+      wday = lubridate::wday(
+        .data$day,
+        label = TRUE,
+        abbr = TRUE,
+        week_start = 1
+      ),
+      year = lubridate::year(.data$day)
+    )
+
+  # Plot for input data
+  input_calendar <- ggplot2::ggplot(daily_data, ggplot2::aes(
+    x = .data$wday,
+    y = .data$week,
+    fill = .data$total_input
+  )) +
+    ggplot2::geom_tile(color = "white", linewidth = 0.1) +
+    ggplot2::facet_wrap(~ month + year, ncol = 3, scales = "free_y") +
+    ggplot2::scale_fill_gradient(
+      low = "lightblue",
+      high = "blue",
+      na.value = "white"
+    ) +
+    ggplot2::scale_y_reverse() +
+    ggplot2::labs(
+      title = "Power Input Calendar Heatmap",
+      fill = "Input (kWh)"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+
+  # Plot for output data
+  output_calendar <- ggplot2::ggplot(daily_data, ggplot2::aes(
+    x = .data$wday,
+    y = .data$week,
+    fill = .data$total_output
+  )) +
+    ggplot2::geom_tile(color = "white", linewidth = 0.1) +
+    ggplot2::facet_wrap(~ month + year, ncol = 3, scales = "free_y") +
+    ggplot2::scale_fill_gradient(
+      low = "lightpink",
+      high = "red",
+      na.value = "white"
+    ) +
+    ggplot2::scale_y_reverse() +
+    ggplot2::labs(
+      title = "Power Output Calendar Heatmap",
+      fill = "Output (kWh)"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+
+  # Combine input and output calendars
+  combined_calendar <- patchwork::plot_layout(ncol = 2) +
+    input_calendar +
+    output_calendar
+
+  return(combined_calendar)
 }

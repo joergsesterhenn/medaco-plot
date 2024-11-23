@@ -72,3 +72,10 @@ test_that("First plot from plot_map renders as before", {
     )
   )
 })
+
+test_that("calendar heatmap plot renders as before", {
+  vdiffr::expect_doppelganger(
+    "A calendar heatmap plot",
+    plot_calendar_heatmap(larger_input_for_testing)
+  )
+})

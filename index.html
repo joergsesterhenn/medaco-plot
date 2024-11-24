@@ -71,10 +71,35 @@
 <div class="section level1">
 <h1 id="docker-image-ausführen">Docker image ausführen<a class="anchor" aria-label="anchor" href="#docker-image-ausf%C3%BChren"></a>
 </h1>
-<p>Das Verzeichnis mit den csv-Dateien muss in den Container gemounted werden.</p>
+<p>Das Verzeichnis mit den csv-Dateien muss in den Container gemounted werden. Per Default erwartet der Container die Daten im Verzeichnis <strong>/data</strong>. Dieser Ordner kann durch setzen der Umgebungsvariablen MEDACO_DATA überschrieben werden. Es wird rekursiv in diesem Verzeichnis nach csv Daten gesucht. Alle Daten werden aggregiert und visualisiert.</p>
 <pre><code>docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 medaco-plot</code></pre>
 <p>Der aktuelle Stand des Images kann auch direkt aus der github container registry bezogen werden:</p>
 <pre><code>docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 ghcr.io/joergsesterhenn/medaco-plot:main</code></pre>
+</div>
+<div class="section level1">
+<h1 id="shiny-app">Shiny App<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+</h1>
+<p>Das Projekt kann auch ausgecheckt und als Shiny app gestartet werden. Wenn die Umgebungsvariable MEDACO_DATA auf das Verzeichnis mit den zu visualisierenden Daten gesetzt ist, werden diese visualisiert. Andernfalls kann über die Oberfläche ein Ordner ausgewählt werden.</p>
+</div>
+<div class="section level1">
+<h1 id="entwicklung">Entwicklung<a class="anchor" aria-label="anchor" href="#entwicklung"></a>
+</h1>
+<p>Für die Entwicklung wird R (&gt;=4.4.2) verwendet. Medaco-Plot wird in VSCode entwickelt. Im Code werden Referenzen außerhalb von <em>base</em> immer explizit angegeben.</p>
+<p>Folgende Befehle sind bei der Entwicklung hilfreich:</p>
+<pre><code><span><span class="co"># Abhängigkeiten installieren</span></span>
+<span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/restore.html" class="external-link">restore</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Geänderte Abhängigkeiten festschreiben</span></span>
+<span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">snapshot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># run tests</span></span>
+<span><span class="fu">devtoold</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># check coverage</span></span>
+<span><span class="fu">covr</span><span class="fu">::</span><span class="fu">package_coverage</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># check package consistency</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">check</span><span class="op">(</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level1">
 <h1 id="vorschau">Vorschau<a class="anchor" aria-label="anchor" href="#vorschau"></a>

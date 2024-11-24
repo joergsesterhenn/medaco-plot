@@ -1,11 +1,4 @@
-library(ggplot2)
-library(ggridges)
-library(scales, warn.conflicts = FALSE)
-library(dplyr)
-library(lubridate)
-library(patchwork)
-
-
+library(magrittr)
 #' Map of Dropdown Items to Plot Functions
 #'
 #' A data frame mapping dropdown box items to corresponding plot functions.

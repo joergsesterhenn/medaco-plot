@@ -31,7 +31,7 @@ docker build -t medaco-plot .
 ```
 
 # Docker image ausführen
-Das Verzeichnis mit den csv-Dateien muss in den Container gemounted werden. 
+Das Verzeichnis mit den csv-Dateien muss in den Container gemounted werden. Per Default erwartet der Container die Daten im Verzeichnis **/data**. Dieser Ordner kann durch setzen der Umgebungsvariablen MEDACO_DATA überschrieben werden. Es wird rekursiv in diesem Verzeichnis nach csv Daten gesucht. Alle Daten werden aggregiert und visualisiert.
 ```
 docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 medaco-plot
 ```
@@ -41,6 +41,34 @@ Der aktuelle Stand des Images kann auch direkt aus der github container registry
 docker run -v /local/path/to/csvs:/data -it --rm -p 3838:3838 ghcr.io/joergsesterhenn/medaco-plot:main
 ```
 
+# Shiny App
+
+Das Projekt kann auch ausgecheckt und als Shiny app gestartet werden. 
+Wenn die Umgebungsvariable MEDACO_DATA auf das Verzeichnis mit den zu visualisierenden Daten gesetzt ist, werden diese visualisiert. Andernfalls kann über die Oberfläche ein Ordner ausgewählt werden.
+
+# Entwicklung
+
+Für die Entwicklung wird R (>=4.4.2) verwendet.
+Medaco-Plot wird in VSCode entwickelt.
+Im Code werden Referenzen außerhalb von *base* immer explizit angegeben.
+
+Folgende Befehle sind bei der Entwicklung hilfreich:
+```
+# Abhängigkeiten installieren
+renv::restore() 
+
+# Geänderte Abhängigkeiten festschreiben
+renv::snapshot()
+
+# run tests
+devtoold::test() 
+
+# check coverage
+covr::package_coverage()
+
+# check package consistency
+devtools::check()
+```
 # Vorschau
 
 ![Screenshot](https://github.com/joergsesterhenn/medaco-plot/blob/main/images/plot.png?raw=true)

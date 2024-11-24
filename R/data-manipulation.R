@@ -1,6 +1,4 @@
-library(dplyr, warn.conflicts = FALSE)
-library(tidyr, warn.conflicts = FALSE)
-
+library(magrittr)
 #' Get Hourly Data in Long Format
 #'
 #' Aggregates and reshapes the data by hour, returning it in a long format.

@@ -1,5 +1,3 @@
-library(readr, warn.conflicts = FALSE)
-
 #' Get List of Files in Directory
 #'
 #' Retrieves a list of all `.CSV` files in the specified directory.

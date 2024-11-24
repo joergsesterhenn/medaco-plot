@@ -38,5 +38,7 @@ RUN Rscript -e 'renv::restore()'
 # expose port
 EXPOSE 3838
 
+ENV MEDACO_DATA=/data
+
 # run app on container start
 CMD ["R", "-e", "shiny::runApp('/app', host = '0.0.0.0', port = 3838)"]

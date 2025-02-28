@@ -76,11 +76,11 @@ plot <- function(plot_type, power_data) {
 #' plot_aggregated_by_year(power_data)
 #' @export
 plot_aggregated_by_year <- function(power_data) {
-  yearly_data_long <- get_yearly_data_long(power_data)
-  ggplot2::ggplot(
-    yearly_data_long,
-    ggplot2::aes(x = .data$year, y = .data$value, fill = .data$type)
-  ) +
+  power_data %>%
+    get_yearly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$year, y = .data$value, fill = .data$type)
+    ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
       title = "Yearly Input and Output Sums (kWh)",
@@ -122,11 +122,11 @@ plot_aggregated_by_year <- function(power_data) {
 #' plot_aggregated_by_month(power_data)
 #' @export
 plot_aggregated_by_month <- function(power_data) {
-  monthly_data_long <- get_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    monthly_data_long,
-    ggplot2::aes(x = .data$year_month, y = .data$value, fill = .data$type)
-  ) +
+  power_data %>%
+    get_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$year_month, y = .data$value, fill = .data$type)
+    ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
       title = "Monthly Input and Output Sums",
@@ -161,11 +161,11 @@ plot_aggregated_by_month <- function(power_data) {
 #' plot_aggregated_by_hour(power_data)
 #' @export
 plot_aggregated_by_hour <- function(power_data) {
-  hourly_data_long <- get_hourly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_data_long,
-    ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
-  ) +
+  power_data %>%
+    get_hourly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
+    ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
       title = "Hourly Input and Output Sums",
@@ -200,11 +200,11 @@ plot_aggregated_by_hour <- function(power_data) {
 #' plot_by_hour_and_month(power_data)
 #' @export
 plot_by_hour_and_month <- function(power_data) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_monthly_data_long,
-    ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
-  ) +
+  power_data %>%
+    get_hourly_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$hour, y = .data$value, fill = .data$type)
+    ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::facet_wrap(~month, ncol = 3) +
     ggplot2::labs(
@@ -240,11 +240,11 @@ plot_by_hour_and_month <- function(power_data) {
 #' plot_heatmap(power_data)
 #' @export
 plot_heatmap <- function(power_data) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_monthly_data_long,
-    ggplot2::aes(x = .data$hour, y = .data$month, fill = .data$value)
-  ) +
+  power_data %>%
+    get_hourly_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$hour, y = .data$month, fill = .data$value)
+    ) +
     ggplot2::geom_tile() +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::scale_fill_gradient(low = "white", high = "blue") +
@@ -279,16 +279,16 @@ plot_heatmap <- function(power_data) {
 #' plot_ridgeline(power_data)
 #' @export
 plot_ridgeline <- function(power_data) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_monthly_data_long,
-    ggplot2::aes(
-      x = as.numeric(.data$hour),
-      y = .data$month,
-      height = .data$value,
-      fill = .data$type
-    )
-  ) +
+  power_data %>%
+    get_hourly_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = as.numeric(.data$hour),
+        y = .data$month,
+        height = .data$value,
+        fill = .data$type
+      )
+    ) +
     ggridges::geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
@@ -324,16 +324,16 @@ plot_ridgeline <- function(power_data) {
 #' plot_stacked_area(power_data)
 #' @export
 plot_stacked_area <- function(power_data) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_monthly_data_long,
-    ggplot2::aes(
-      x = .data$hour,
-      y = .data$value,
-      fill = .data$month,
-      group = .data$month
-    )
-  ) +
+  power_data %>%
+    get_hourly_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = .data$hour,
+        y = .data$value,
+        fill = .data$month,
+        group = .data$month
+      )
+    ) +
     ggplot2::geom_area(position = "stack", alpha = 0.8) +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
@@ -367,16 +367,16 @@ plot_stacked_area <- function(power_data) {
 #' plot_line_chart(power_data)
 #' @export
 plot_line_chart <- function(power_data) {
-  hourly_monthly_data_long <- get_hourly_monthly_data_long(power_data)
-  ggplot2::ggplot(
-    hourly_monthly_data_long,
-    ggplot2::aes(
-      x = .data$hour,
-      y = .data$value,
-      color = .data$month,
-      group = .data$month
-    )
-  ) +
+  power_data %>%
+    get_hourly_monthly_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = .data$hour,
+        y = .data$value,
+        color = .data$month,
+        group = .data$month
+      )
+    ) +
     ggplot2::geom_line() +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
@@ -548,77 +548,26 @@ plot_top_days <- function(power_data) {
 }
 
 # Function to create calendar heatmaps for power input and output
-plot_calendar_heatmap <- function(data_frame) {
-  # Aggregate data by day
-  daily_data <- data_frame %>%
-    dplyr::mutate(day = as.Date(.data$timestamp)) %>%
-    dplyr::group_by(.data$day) %>%
-    dplyr::summarise(
-      total_input = sum(.data$INPUT, na.rm = TRUE),
-      total_output = sum(.data$OUTPUT, na.rm = TRUE)
-    ) %>%
-    dplyr::ungroup()
-
-  # Add additional columns for calendar layout
-  daily_data <- daily_data %>%
-    dplyr::mutate(
-      month = lubridate::month(.data$day, label = TRUE, abbr = TRUE),
-      week = lubridate::week(.data$day),
-      wday = lubridate::wday(
-        .data$day,
-        label = TRUE,
-        abbr = TRUE,
-        week_start = 1
-      ),
-      year = lubridate::year(.data$day)
+plot_calendar_heatmap <- function(power_data) {
+  calendaric_data <- get_calendaric_data(power_data)
+  cowplot::plot_grid(
+    calendR::calendR(
+      year = 2024,
+      special.days = calendaric_data$total_input,
+      gradient = TRUE,
+      special.col = "red",
+      low.col = "white",
+      start = "M",
+      title = "Input in 2024"
+    ),
+    calendR::calendR(
+      year = 2024,
+      special.days = calendaric_data$total_output,
+      gradient = TRUE,
+      special.col = "blue",
+      low.col = "white",
+      start = "M",
+      title = "Output in 2024"
     )
-
-  # Plot for input data
-  input_calendar <- ggplot2::ggplot(daily_data, ggplot2::aes(
-    x = .data$wday,
-    y = .data$week,
-    fill = .data$total_input
-  )) +
-    ggplot2::geom_tile(color = "white", linewidth = 0.1) +
-    ggplot2::facet_wrap(~ month + year, ncol = 3, scales = "free_y") +
-    ggplot2::scale_fill_gradient(
-      low = "lightblue",
-      high = "blue",
-      na.value = "white"
-    ) +
-    ggplot2::scale_y_reverse() +
-    ggplot2::labs(
-      title = "Power Input Calendar Heatmap",
-      fill = "Input (kWh)"
-    ) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-
-  # Plot for output data
-  output_calendar <- ggplot2::ggplot(daily_data, ggplot2::aes(
-    x = .data$wday,
-    y = .data$week,
-    fill = .data$total_output
-  )) +
-    ggplot2::geom_tile(color = "white", linewidth = 0.1) +
-    ggplot2::facet_wrap(~ month + year, ncol = 3, scales = "free_y") +
-    ggplot2::scale_fill_gradient(
-      low = "lightpink",
-      high = "red",
-      na.value = "white"
-    ) +
-    ggplot2::scale_y_reverse() +
-    ggplot2::labs(
-      title = "Power Output Calendar Heatmap",
-      fill = "Output (kWh)"
-    ) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-
-  # Combine input and output calendars
-  combined_calendar <- patchwork::plot_layout(ncol = 2) +
-    input_calendar +
-    output_calendar
-
-  return(combined_calendar)
+  )
 }

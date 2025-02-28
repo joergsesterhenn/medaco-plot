@@ -1,6 +1,6 @@
 # Shiny App
 ui <- shiny::fluidPage(
-  shiny::titlePanel("Power Input and Output Analysis of medaco data"),
+  shiny::titlePanel("Power input and output analysis of medaco data"),
   shiny::sidebarLayout(
     shiny::sidebarPanel(
       if (Sys.getenv("MEDACO_DATA") == "") {

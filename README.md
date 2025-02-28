@@ -61,7 +61,7 @@ renv::restore()
 renv::snapshot()
 
 # run tests
-devtoold::test() 
+devtools::test() 
 
 # check coverage
 covr::package_coverage()

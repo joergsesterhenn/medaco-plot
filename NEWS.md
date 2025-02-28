@@ -1,7 +1,5 @@
 # medacoPlot 0.2.0
 
-# medacoPlot 0.1.1
-
 - add calendar heatmap plot
 
 # medacoPlot 0.1.0

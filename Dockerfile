@@ -18,11 +18,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     libfreetype6-dev \
     libpng-dev \
     libtiff5-dev \
-    libjpeg-dev 
-
-## update system libraries
-RUN apt-get update && \
-    apt-get upgrade -y && \
+    libjpeg-dev \
+    libmagick++-dev && \
     apt-get clean
 
 # copy necessary files
@@ -32,8 +29,8 @@ COPY ./renv.lock ./renv.lock
 COPY ./R ./app
 
 # install renv & restore packages
-RUN Rscript -e 'install.packages("renv")'
-RUN Rscript -e 'renv::restore()'
+RUN Rscript -e 'install.packages("renv")' && \
+    Rscript -e 'renv::restore()'
 
 # expose port
 EXPOSE 3838

@@ -39,8 +39,10 @@ get_hourly_data_long <- function(power_data) {
 #' Aggregates and reshapes the data by day, returning it in a long format.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to filter the dataframe.
 #' @return A data frame with daily `total_input` and `total_output` values.
 #' @importFrom dplyr group_by summarise
+#' @importFrom rlang .data
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
@@ -53,16 +55,15 @@ get_hourly_data_long <- function(power_data) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' get_hourly_data_long(power_data)
+#' get_calendaric_data(power_data)
 #' @export
-get_calendaric_data <- function(power_data) {
+get_calendaric_data <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     dplyr::mutate(
       yday = lubridate::yday(.data$timestamp),
       year = lubridate::year(.data$timestamp),
     ) %>%
-    dplyr::filter(.data$year == 2024) %>%
-    # Summing INPUT and OUTPUT values for each month
+    get_data_for_year(year_to_plot) %>%
     dplyr::group_by(.data$yday) %>%
     dplyr::summarise(
       total_input = sum(.data$INPUT, na.rm = TRUE),
@@ -70,11 +71,7 @@ get_calendaric_data <- function(power_data) {
       .groups = "drop"
     ) %>%
     tidyr::complete(
-      yday = seq(
-        from = 1,
-        to = 366,
-        by = 1
-      )
+      yday = seq(from = 1, to = get_days_in_year(year_to_plot), by = 1)
     ) %>%
     dplyr::mutate(
       dplyr::across(
@@ -223,4 +220,71 @@ pivot_longer_data <- function(power_data) {
     names_to = "type",
     values_to = "value"
   )
+}
+
+#' Get a list of years for which data is available in a dataframe.
+#'
+#' @param power_data data frame with `timestamp` columns.
+#' @return A data frame with only a `year` column and corresponding values.
+#' @importFrom rlang .data
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2001-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2002-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2003-02-02 02:00:00", tz = "UTC")
+#'   ),
+#'   total_input = c(1.0, 2.0, 3.0, 4.0),
+#'   total_output = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' get_years_in_data(power_data)
+#' @export
+get_years_in_data <- function(power_data) {
+  power_data %>%
+    dplyr::mutate(year = lubridate::year(.data$timestamp)) %>%
+    dplyr::select("year") %>%
+    dplyr::distinct(.data$year)
+}
+
+#' Filter dataframe for data of one specified year only.
+#'
+#' @param power_data data frame with `timestamp` columns.
+#' @param selected_year year for which to return data.
+#' @importFrom rlang .data
+#' @return A data frame with data only for the selected year.
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2001-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2002-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2003-02-02 02:00:00", tz = "UTC")
+#'   ),
+#'   total_input = c(1.0, 2.0, 3.0, 4.0),
+#'   total_output = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' get_data_for_year(power_data, 2002)
+#' @export
+get_data_for_year <- function(power_data, selected_year) {
+  power_data %>%
+    dplyr::filter(lubridate::year(.data$timestamp) == selected_year)
+}
+
+#' Return the number of days for the given year.
+#'
+#' @param given_year year for which to return data.
+#' @return number of days in that year.
+#' @examples
+#' # Example
+#' get_days_in_year(2024)
+#' @export
+get_days_in_year <- function(given_year) {
+  if (lubridate::leap_year(strtoi(given_year))) {
+    366
+  } else {
+    365
+  }
 }

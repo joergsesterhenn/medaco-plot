@@ -4,10 +4,12 @@
 \alias{plot_by_hour_and_month}
 \title{Plot Hourly Data by Month}
 \usage{
-plot_by_hour_and_month(power_data)
+plot_by_hour_and_month(power_data, year_to_plot = 2024)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{year_to_plot}{year for which to plot the dataframe.}
 }
 \value{
 A ggplot object showing hourly values by month in facets.

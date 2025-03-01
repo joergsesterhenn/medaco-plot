@@ -29,6 +29,7 @@ input_color <- "#e97171"
 #'
 #' @param plot_type Character, the plot type from the dropdown menu.
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object created by the appropriate plotting function.
 #' @examples
 #' # Example using a small sample data frame
@@ -42,11 +43,11 @@ input_color <- "#e97171"
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot("by month", power_data)
+#' plot("by month", power_data, 2000)
 #' @export
-plot <- function(plot_type, power_data) {
+plot <- function(plot_type, power_data, year_to_plot = 2024) {
   function_name <- plot_map[plot_type, "map"]
-  get(function_name)(power_data)
+  get(function_name)(power_data, year_to_plot)
 }
 
 ##################################################
@@ -59,6 +60,7 @@ plot <- function(plot_type, power_data) {
 #' Generates a bar plot showing yearly input and output sums.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object showing yearly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -75,7 +77,7 @@ plot <- function(plot_type, power_data) {
 #' )
 #' plot_aggregated_by_year(power_data)
 #' @export
-plot_aggregated_by_year <- function(power_data) {
+plot_aggregated_by_year <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_yearly_data_long() %>%
     ggplot2::ggplot(
@@ -105,6 +107,7 @@ plot_aggregated_by_year <- function(power_data) {
 #' Generates a bar plot showing monthly input and output sums.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object showing monthly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -121,7 +124,7 @@ plot_aggregated_by_year <- function(power_data) {
 #' )
 #' plot_aggregated_by_month(power_data)
 #' @export
-plot_aggregated_by_month <- function(power_data) {
+plot_aggregated_by_month <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -144,6 +147,7 @@ plot_aggregated_by_month <- function(power_data) {
 #' Generates a bar plot showing hourly input and output sums.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object showing hourly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -160,7 +164,7 @@ plot_aggregated_by_month <- function(power_data) {
 #' )
 #' plot_aggregated_by_hour(power_data)
 #' @export
-plot_aggregated_by_hour <- function(power_data) {
+plot_aggregated_by_hour <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_data_long() %>%
     ggplot2::ggplot(
@@ -183,6 +187,7 @@ plot_aggregated_by_hour <- function(power_data) {
 #' Generates a bar plot showing hourly input and output sums by month.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object showing hourly values by month in facets.
 #' @importFrom rlang .data
 #' @examples
@@ -199,7 +204,7 @@ plot_aggregated_by_hour <- function(power_data) {
 #' )
 #' plot_by_hour_and_month(power_data)
 #' @export
-plot_by_hour_and_month <- function(power_data) {
+plot_by_hour_and_month <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -223,6 +228,7 @@ plot_by_hour_and_month <- function(power_data) {
 #' Creates a heatmap to show hourly input and output data across months.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object with a heatmap representing input/output.
 #' @importFrom rlang .data
 #' @examples
@@ -239,7 +245,7 @@ plot_by_hour_and_month <- function(power_data) {
 #' )
 #' plot_heatmap(power_data)
 #' @export
-plot_heatmap <- function(power_data) {
+plot_heatmap <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -262,6 +268,7 @@ plot_heatmap <- function(power_data) {
 #' Creates a ridgeline plot to show distribution of input/output data by month.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object with a ridgeline plot.
 #' @importFrom rlang .data
 #' @examples
@@ -278,7 +285,7 @@ plot_heatmap <- function(power_data) {
 #' )
 #' plot_ridgeline(power_data)
 #' @export
-plot_ridgeline <- function(power_data) {
+plot_ridgeline <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -307,6 +314,7 @@ plot_ridgeline <- function(power_data) {
 #' Creates a stacked area chart to visualize input/output data by month.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object with a stacked area chart.
 #' @importFrom rlang .data
 #' @examples
@@ -323,7 +331,7 @@ plot_ridgeline <- function(power_data) {
 #' )
 #' plot_stacked_area(power_data)
 #' @export
-plot_stacked_area <- function(power_data) {
+plot_stacked_area <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -350,6 +358,7 @@ plot_stacked_area <- function(power_data) {
 #' Creates a line chart to show input/output data by hour for each month.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
 #' @examples
@@ -366,7 +375,7 @@ plot_stacked_area <- function(power_data) {
 #' )
 #' plot_line_chart(power_data)
 #' @export
-plot_line_chart <- function(power_data) {
+plot_line_chart <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -394,6 +403,7 @@ plot_line_chart <- function(power_data) {
 #' Creates a Bar Chart and also displays mean and percentile values.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
 #' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
 #' @importFrom stats quantile reorder
@@ -411,7 +421,7 @@ plot_line_chart <- function(power_data) {
 #' )
 #' plot_top_days(power_data)
 #' @export
-plot_top_days <- function(power_data) {
+plot_top_days <- function(power_data, year_to_plot = 2024) {
   # Aggregate data by day
   daily_data <- power_data %>%
     dplyr::mutate(day = as.Date(.data$timestamp)) %>%
@@ -547,27 +557,47 @@ plot_top_days <- function(power_data) {
     )
 }
 
-# Function to create calendar heatmaps for power input and output
-plot_calendar_heatmap <- function(power_data) {
-  calendaric_data <- get_calendaric_data(power_data)
+#' Generate Calendar Heatmap Chart
+#'
+#' Creates calendar heatmap chart to show input/output data per day.
+#'
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
+#' @return A ggplot object with a line chart.
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 02:00:00", tz = "UTC")
+#'   ),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' plot_calendar_heatmap(power_data, 2000)
+#' @export
+plot_calendar_heatmap <- function(power_data, year_to_plot = 2024) {
+  calendaric_data <- get_calendaric_data(power_data, year_to_plot)
   cowplot::plot_grid(
     calendR::calendR(
-      year = 2024,
+      year = year_to_plot,
       special.days = calendaric_data$total_input,
       gradient = TRUE,
       special.col = "red",
       low.col = "white",
       start = "M",
-      title = "Input in 2024"
+      title = "Input"
     ),
     calendR::calendR(
-      year = 2024,
+      year = year_to_plot,
       special.days = calendaric_data$total_output,
       gradient = TRUE,
       special.col = "blue",
       low.col = "white",
       start = "M",
-      title = "Output in 2024"
+      title = "Output"
     )
   )
 }

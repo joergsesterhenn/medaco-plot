@@ -10,6 +10,10 @@ ui <- shiny::fluidPage(
           "Please select folder containing data"
         )
       },
+      shiny::selectInput("year_to_plot",
+        label = "Select year",
+        choices = ""
+      ),
       shiny::selectInput("plot_type",
         label = "Select Plot Type",
         choices = ""

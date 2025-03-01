@@ -4,10 +4,12 @@
 \alias{plot_top_days}
 \title{Generate a Bar Chart of top 10 days of power input vs output}
 \usage{
-plot_top_days(power_data)
+plot_top_days(power_data, year_to_plot = 2024)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{year_to_plot}{year for which to plot the dataframe.}
 }
 \value{
 A ggplot object with a line chart.

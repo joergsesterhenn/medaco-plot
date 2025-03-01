@@ -1474,7 +1474,7 @@
 <text x='23.07' y='499.54' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>38</text>
 <text x='23.07' y='519.33' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>39</text>
 <text x='23.07' y='539.13' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>40</text>
-<text x='186.91' y='42.11' text-anchor='middle' style='font-size: 20.00px; fill: #4D4D4D; font-family: sans;' textLength='115.66px' lengthAdjust='spacingAndGlyphs'>Input in 2024</text>
+<text x='186.91' y='42.11' text-anchor='middle' style='font-size: 20.00px; fill: #4D4D4D; font-family: sans;' textLength='44.48px' lengthAdjust='spacingAndGlyphs'>Input</text>
 </g>
 <defs>
   <clipPath id='cpMzYwLjAwfDcyMC4wMHwwLjAwfDU3Ni4wMA=='>
@@ -2931,6 +2931,6 @@
 <text x='383.07' y='499.54' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>38</text>
 <text x='383.07' y='519.33' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>39</text>
 <text x='383.07' y='539.13' text-anchor='end' style='font-size: 8.00px; fill: none; font-family: sans;' textLength='8.90px' lengthAdjust='spacingAndGlyphs'>40</text>
-<text x='546.91' y='42.11' text-anchor='middle' style='font-size: 20.00px; fill: #4D4D4D; font-family: sans;' textLength='131.22px' lengthAdjust='spacingAndGlyphs'>Output in 2024</text>
+<text x='546.91' y='42.11' text-anchor='middle' style='font-size: 20.00px; fill: #4D4D4D; font-family: sans;' textLength='60.05px' lengthAdjust='spacingAndGlyphs'>Output</text>
 </g>
 </svg>

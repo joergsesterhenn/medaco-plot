@@ -4,10 +4,12 @@
 \alias{get_calendaric_data}
 \title{Get Daily Data in Long Format}
 \usage{
-get_calendaric_data(power_data)
+get_calendaric_data(power_data, year_to_plot = 2024)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{year_to_plot}{year for which to filter the dataframe.}
 }
 \value{
 A data frame with daily \code{total_input} and \code{total_output} values.
@@ -27,5 +29,5 @@ power_data <- data.frame(
   INPUT = c(1.0, 2.0, 3.0, 4.0),
   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 )
-get_hourly_data_long(power_data)
+get_calendaric_data(power_data)
 }

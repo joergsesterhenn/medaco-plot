@@ -4,10 +4,12 @@
 \alias{plot_aggregated_by_year}
 \title{Plot Aggregated Data by Year}
 \usage{
-plot_aggregated_by_year(power_data)
+plot_aggregated_by_year(power_data, year_to_plot = 2024)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{year_to_plot}{year for which to plot the dataframe.}
 }
 \value{
 A ggplot object showing yearly aggregated values.

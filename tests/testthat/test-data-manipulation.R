@@ -1,5 +1,5 @@
-library(dplyr)
-library(tidyr)
+library(dplyr, warn.conflicts = FALSE)
+library(tidyr, warn.conflicts = FALSE)
 
 testthat::test_that("data is pivoted correctly to long form", {
   expected_data_frame <-
@@ -107,5 +107,38 @@ testthat::test_that("data is transformed to produce hourly and monthly data", {
   testthat::expect_equal(
     expected_data_frame,
     get_hourly_monthly_data_long(input_for_testing)
+  )
+})
+
+testthat::test_that("number of days in year are returned correctly", {
+  testthat::expect_equal(
+    366,
+    get_days_in_year(2024)
+  )
+  testthat::expect_equal(
+    365,
+    get_days_in_year(2025)
+  )
+})
+
+testthat::test_that("data gets filtered correctly", {
+  power_data <- data.frame(
+    timestamp = c(
+      as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+      as.POSIXct("2001-01-02 01:00:00", tz = "UTC"),
+      as.POSIXct("2002-02-01 02:00:00", tz = "UTC"),
+      as.POSIXct("2003-02-02 02:00:00", tz = "UTC")
+    ),
+    total_input = c(1.0, 2.0, 3.0, 4.0),
+    total_output = c(4.0, 3.0, 2.0, 1.0)
+  )
+  expected_power_data <- data.frame(
+    timestamp = as.POSIXct("2002-02-01 02:00:00", tz = "UTC"),
+    total_input = 3.0,
+    total_output = 2.0
+  )
+  testthat::expect_equal(
+    get_data_for_year(power_data, "2002"),
+    expected_power_data
   )
 })

@@ -4,10 +4,12 @@
 \alias{plot_line_chart}
 \title{Generate a Line Chart of Hourly Data by Month}
 \usage{
-plot_line_chart(power_data)
+plot_line_chart(power_data, year_to_plot = 2024)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{year_to_plot}{year for which to plot the dataframe.}
 }
 \value{
 A ggplot object with a line chart.

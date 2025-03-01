@@ -52,17 +52,42 @@ server <- function(input, output, session) {
     )
   })
 
+  shiny::observe({
+    shiny::req(filtered_inputdata())
+    shiny::req(input$year_to_plot)
+    number_of_rows <- nrow(filtered_inputdata())
+    shiny::showNotification(
+      paste(
+        "Showing ", number_of_rows, " datapoints for ", input$year_to_plot, "."
+      ),
+      type = "message",
+      duration = 5
+    )
+  })
+
   filtered_inputdata <- shiny::reactive({
     shiny::req(inputdata())
     shiny::req(input$year_to_plot)
     get_data_for_year(inputdata(), input$year_to_plot)
   })
 
+  output$output_data <- DT::renderDT({
+    shiny::req(filtered_inputdata())
+    filtered_inputdata()
+  })
+
+
   # Reactive plot output based on user selection
   output$plot <- shiny::renderPlot({
     shiny::req(filtered_inputdata())
     shiny::req(input$plot_type)
     shiny::req(input$year_to_plot)
-    plot(input$plot_type, filtered_inputdata(), input$year_to_plot)
+    shiny::req(input$display_mode)
+    plot(
+      input$plot_type,
+      filtered_inputdata(),
+      input$display_mode,
+      input$year_to_plot
+    )
   })
 }

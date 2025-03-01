@@ -6,6 +6,7 @@ library(magrittr)
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A data frame with hourly `total_input` and `total_output` values.
 #' @importFrom dplyr group_by summarise
+#' @importFrom rlang .data
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(

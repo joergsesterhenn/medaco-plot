@@ -1,4 +1,5 @@
 library(magrittr)
+library(ggplot2)
 #' Map of Dropdown Items to Plot Functions
 #'
 #' A data frame mapping dropdown box items to corresponding plot functions.
@@ -45,9 +46,18 @@ input_color <- "#e97171"
 #' )
 #' plot("by month", power_data, 2000)
 #' @export
-plot <- function(plot_type, power_data, year_to_plot = 2024) {
+plot <- function(plot_type, power_data, display_mode, year_to_plot = 2024) {
   function_name <- plot_map[plot_type, "map"]
-  get(function_name)(power_data, year_to_plot)
+  get(function_name)(power_data, year_to_plot) +
+    get_theme(display_mode)
+}
+
+get_theme <- function(display_mode) {
+  if (display_mode == "dark") {
+    ggdark::dark_theme_light(base_size = 20)
+  } else {
+    ggplot2::theme_light(base_size = 20)
+  }
 }
 
 ##################################################
@@ -253,7 +263,7 @@ plot_heatmap <- function(power_data, year_to_plot = 2024) {
     ) +
     ggplot2::geom_tile() +
     ggplot2::facet_wrap(~type, ncol = 1) +
-    ggplot2::scale_fill_gradient(low = "white", high = "blue") +
+    ggplot2::scale_fill_gradient(low = "black", high = "blue") +
     ggplot2::labs(
       title = "Heatmap of Hourly Input and Output by Month",
       x = "Hour",

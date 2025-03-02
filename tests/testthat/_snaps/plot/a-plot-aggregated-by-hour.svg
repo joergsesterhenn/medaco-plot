@@ -68,8 +68,8 @@
 <text transform='translate(262.24,549.71) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>02</text>
 <text transform='translate(402.97,549.71) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>03</text>
 <text transform='translate(543.70,549.71) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.79px' lengthAdjust='spacingAndGlyphs'>04</text>
-<text x='328.32' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='23.85px' lengthAdjust='spacingAndGlyphs'>Hour</text>
-<text transform='translate(13.05,281.64) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='71.55px' lengthAdjust='spacingAndGlyphs'>Sum of Values</text>
+<text x='328.32' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='22.02px' lengthAdjust='spacingAndGlyphs'>hour</text>
+<text transform='translate(13.05,281.64) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='100.27px' lengthAdjust='spacingAndGlyphs'>sum of values (kWh)</text>
 <rect x='634.81' y='251.22' width='79.71' height='60.85' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='640.29' y='265.41' style='font-size: 11.00px; font-family: sans;' textLength='20.80px' lengthAdjust='spacingAndGlyphs'>type</text>
 <rect x='640.29' y='272.03' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
@@ -78,6 +78,6 @@
 <rect x='641.00' y='290.02' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #E97171;' />
 <text x='663.05' y='283.70' style='font-size: 8.80px; font-family: sans;' textLength='40.61px' lengthAdjust='spacingAndGlyphs'>total_input</text>
 <text x='663.05' y='300.98' style='font-size: 8.80px; font-family: sans;' textLength='45.99px' lengthAdjust='spacingAndGlyphs'>total_output</text>
-<text x='32.79' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='177.59px' lengthAdjust='spacingAndGlyphs'>Hourly Input and Output Sums</text>
+<text x='32.79' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='44.04px' lengthAdjust='spacingAndGlyphs'>by hour</text>
 </g>
 </svg>

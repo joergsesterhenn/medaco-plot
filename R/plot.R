@@ -8,21 +8,21 @@ library(ggplot2)
 #' names as column values.
 plot_map <- data.frame(
   map = c(
-    "by year" = "plot_aggregated_by_year",
-    "by month" = "plot_aggregated_by_month",
-    "by hour" = "plot_aggregated_by_hour",
-    "by hour and month" = "plot_by_hour_and_month",
-    "heatmap" = "plot_heatmap",
-    "calendar heatmap" = "plot_calendar_heatmap",
-    "line chart" = "plot_line_chart",
-    "ridgeline" = "plot_ridgeline",
-    "stacked area" = "plot_stacked_area",
-    "top 10" = "plot_top_days"
+    "by year (bars)" = "plot_by_year_bars",
+    "by month (bars)" = "plot_by_month_bars",
+    "by day per year (heatmap)" = "plot_by_day_per_year_calendar_heatmap",
+    "by day per year (top 10, bars)" = "plot_by_day_per_year_top_10_bars",
+    "by hour per year (bars)" = "plot_by_hour_per_year_bars",
+    "by hour per month (bars)" = "plot_by_hour_per_month_bars",
+    "by hour per month (heatmap)" = "plot_by_hour_per_month_heatmap",
+    "by hour per month (lines)" = "plot_by_hour_per_month_lines",
+    "by hour per month (ridgelines)" = "plot_by_hour_per_month_ridgelines",
+    "by hour per month (stacked areas)" = "plot_by_hour_per_month_stacked_areas"
   )
 )
 
-output_color <- "#add8e6"
-input_color <- "#e97171"
+input_color <- "#add8e6"
+output_color <- "#e97171"
 
 #' Generic Plot Function
 #'
@@ -30,7 +30,9 @@ input_color <- "#e97171"
 #'
 #' @param plot_type Character, the plot type from the dropdown menu.
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param display_mode decides whether to plot dark or light.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @import ggplot2
 #' @return A ggplot object created by the appropriate plotting function.
 #' @examples
 #' # Example using a small sample data frame
@@ -44,9 +46,9 @@ input_color <- "#e97171"
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot("by month", power_data, 2000)
+#' plot("by month", power_data, "light", 2000)
 #' @export
-plot <- function(plot_type, power_data, display_mode, year_to_plot = 2024) {
+plot <- function(plot_type, power_data, display_mode = "dark", year_to_plot = 2024) {
   function_name <- plot_map[plot_type, "map"]
   get(function_name)(power_data, year_to_plot) +
     get_theme(display_mode)
@@ -85,9 +87,9 @@ get_theme <- function(display_mode) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_aggregated_by_year(power_data)
+#' plot_by_year_bars(power_data)
 #' @export
-plot_aggregated_by_year <- function(power_data, year_to_plot = 2024) {
+plot_by_year_bars <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_yearly_data_long() %>%
     ggplot2::ggplot(
@@ -95,20 +97,19 @@ plot_aggregated_by_year <- function(power_data, year_to_plot = 2024) {
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "Yearly Input and Output Sums (kWh)",
-      x = "Year",
-      y = "Sum of Values"
+      title = "by year",
+      x = "year",
+      y = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = output_color, "total_output" = input_color)
+      values = c("total_input" = input_color, "total_output" = output_color)
     ) +
     ggplot2::geom_text(
       ggplot2::aes(label = round(.data$value, digits = 0)),
       vjust = 1.5,
       position = ggplot2::position_dodge(.9),
-      colour = "white",
-      fontface = 2
+      colour = "black"
     )
 }
 
@@ -132,9 +133,9 @@ plot_aggregated_by_year <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_aggregated_by_month(power_data)
+#' plot_by_month_bars(power_data)
 #' @export
-plot_aggregated_by_month <- function(power_data, year_to_plot = 2024) {
+plot_by_month_bars <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -142,13 +143,13 @@ plot_aggregated_by_month <- function(power_data, year_to_plot = 2024) {
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "Monthly Input and Output Sums",
-      x = "Month",
-      y = "Sum of Values"
+      title = "by month",
+      x = "month",
+      y = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = output_color, "total_output" = input_color)
+      values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
 
@@ -172,9 +173,9 @@ plot_aggregated_by_month <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_aggregated_by_hour(power_data)
+#' plot_by_hour_per_year_bars(power_data)
 #' @export
-plot_aggregated_by_hour <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_year_bars <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_data_long() %>%
     ggplot2::ggplot(
@@ -182,13 +183,13 @@ plot_aggregated_by_hour <- function(power_data, year_to_plot = 2024) {
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "Hourly Input and Output Sums",
-      x = "Hour",
-      y = "Sum of Values"
+      title = "by hour",
+      x = "hour",
+      y = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = output_color, "total_output" = input_color)
+      values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
 
@@ -212,9 +213,9 @@ plot_aggregated_by_hour <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_by_hour_and_month(power_data)
+#' plot_by_hour_per_month_bars(power_data)
 #' @export
-plot_by_hour_and_month <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_bars <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -223,13 +224,13 @@ plot_by_hour_and_month <- function(power_data, year_to_plot = 2024) {
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::facet_wrap(~month, ncol = 3) +
     ggplot2::labs(
-      title = "Hourly Input and Output Sums by Month",
-      x = "Hour",
-      y = "Sum of Values"
+      title = "by hour per month",
+      x = "hour",
+      y = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c("total_input" = output_color, "total_output" = input_color)
+      values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
 
@@ -253,9 +254,9 @@ plot_by_hour_and_month <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_heatmap(power_data)
+#' plot_by_hour_per_month_heatmap(power_data)
 #' @export
-plot_heatmap <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_heatmap <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -263,12 +264,12 @@ plot_heatmap <- function(power_data, year_to_plot = 2024) {
     ) +
     ggplot2::geom_tile() +
     ggplot2::facet_wrap(~type, ncol = 1) +
-    ggplot2::scale_fill_gradient(low = "black", high = "blue") +
+    ggplot2::scale_fill_gradient(low = "white", high = "blue") +
     ggplot2::labs(
-      title = "Heatmap of Hourly Input and Output by Month",
-      x = "Hour",
-      y = "Month",
-      fill = "Sum of Values"
+      title = "by hour per month (heatmap)",
+      x = "hour",
+      y = "month",
+      fill = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
@@ -293,9 +294,9 @@ plot_heatmap <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_ridgeline(power_data)
+#' plot_by_hour_per_month_ridgelines(power_data)
 #' @export
-plot_ridgeline <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_ridgelines <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -307,16 +308,17 @@ plot_ridgeline <- function(power_data, year_to_plot = 2024) {
       )
     ) +
     ggridges::geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) +
-    ggplot2::facet_wrap(~type, ncol = 1) +
+    # ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "Ridgeline Plot of Hourly Input and Output by Month",
-      x = "Hour",
-      y = "Month"
+      title = "by hour per month (ridgeline)",
+      x = "hour",
+      y = "month"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
-    )
+    ) +
+    ggplot2::scale_x_continuous(breaks = seq(1, 23))
 }
 
 #' Generate a Stacked Area Chart of Hourly Data by Month
@@ -339,9 +341,9 @@ plot_ridgeline <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_stacked_area(power_data)
+#' plot_by_hour_per_month_stacked_areas(power_data)
 #' @export
-plot_stacked_area <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_stacked_areas <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -355,9 +357,9 @@ plot_stacked_area <- function(power_data, year_to_plot = 2024) {
     ggplot2::geom_area(position = "stack", alpha = 0.8) +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "Stacked Area Chart of Hourly Input and Output by Month",
-      x = "Hour",
-      y = "Sum of Values"
+      title = "by hour per month (stacked area)",
+      x = "hour",
+      y = "sum of values (kWh)"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_viridis_d() # Use a color gradient to distinguish months
@@ -383,9 +385,9 @@ plot_stacked_area <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_line_chart(power_data)
+#' plot_by_hour_per_month_lines(power_data)
 #' @export
-plot_line_chart <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_lines <- function(power_data, year_to_plot = 2024) {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -399,10 +401,10 @@ plot_line_chart <- function(power_data, year_to_plot = 2024) {
     ggplot2::geom_line() +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "Hourly Input and Output by Month",
-      x = "Hour",
-      y = "Sum of Values",
-      color = "Month"
+      title = "by hour per month (linechart)",
+      x = "hour",
+      y = "sum of values (kWh)",
+      color = "month"
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
@@ -414,7 +416,7 @@ plot_line_chart <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
-#' @return A ggplot object with a line chart.
+#' @return A ggplot object with a chart.
 #' @importFrom rlang .data
 #' @importFrom stats quantile reorder
 #' @examples
@@ -429,49 +431,47 @@ plot_line_chart <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_top_days(power_data)
+#' plot_by_day_per_year_top_10_bars(power_data)
 #' @export
-plot_top_days <- function(power_data, year_to_plot = 2024) {
+plot_by_day_per_year_top_10_bars <- function(power_data, year_to_plot = 2024) {
   # Aggregate data by day
   daily_data <- power_data %>%
-    dplyr::mutate(day = as.Date(.data$timestamp)) %>%
-    dplyr::group_by(.data$day) %>%
-    dplyr::summarise(
-      total_input = sum(.data$INPUT, na.rm = TRUE),
-      total_output = sum(.data$OUTPUT, na.rm = TRUE)
-    ) %>%
-    dplyr::ungroup()
+    get_daily_data_long(year_to_plot)
+
+  daily_input_data <- daily_data %>%
+    dplyr::filter(.data$type=="total_input")
+
+  daily_output_data <-daily_data %>% 
+    dplyr::filter(.data$type=="total_output")
 
   # Identify top 10 days for input and output
-  top_input_days <- daily_data %>%
-    dplyr::arrange(dplyr::desc(.data$total_input)) %>%
-    dplyr::slice_head(n = 10) %>%
-    dplyr::mutate(type = "Input", value = .data$total_input)
+  top_input_days <- daily_input_data %>%
+    dplyr::arrange(dplyr::desc(.data$value)) %>%
+    dplyr::slice_head(n = 10)
 
-  top_output_days <- daily_data %>%
-    dplyr::arrange(dplyr::desc(.data$total_output)) %>%
-    dplyr::slice_head(n = 10) %>%
-    dplyr::mutate(type = "Output", value = .data$total_output)
+  top_output_days <- daily_output_data %>%
+    dplyr::arrange(dplyr::desc(.data$value)) %>%
+    dplyr::slice_head(n = 10)
 
   # Combine both sets of top days for plotting
   top_days <- dplyr::bind_rows(top_input_days, top_output_days)
 
   # Calculate statistics for input and output separately
-  avg_input <- mean(daily_data$total_input, na.rm = TRUE)
-  avg_output <- mean(daily_data$total_output, na.rm = TRUE)
-  percentile_90_input <- quantile(daily_data$total_input,
+  avg_input <- mean(daily_input_data$value, na.rm = TRUE)
+  avg_output <- mean(daily_output_data$value, na.rm = TRUE)
+  percentile_90_input <- quantile(daily_input_data$value,
     probs = 0.9,
     na.rm = TRUE
   )
-  percentile_90_output <- quantile(daily_data$total_output,
+  percentile_90_output <- quantile(daily_output_data$value,
     probs = 0.9,
     na.rm = TRUE
   )
-  percentile_10_input <- quantile(daily_data$total_input,
+  percentile_10_input <- quantile(daily_input_data$value,
     probs = 0.1,
     na.rm = TRUE
   )
-  percentile_10_output <- quantile(daily_data$total_output,
+  percentile_10_output <- quantile(daily_output_data$value,
     probs = 0.1,
     na.rm = TRUE
   )
@@ -521,49 +521,48 @@ plot_top_days <- function(power_data, year_to_plot = 2024) {
       linewidth = 1
     ) +
     ggplot2::labs(
-      title = "Top 10 Days of Power Input and Output",
-      x = "Day",
-      y = "Power (kWh)",
-      fill = "Type"
+      title = "by day (top 10, bars)",
+      x = "day",
+      y = "sum of values (kWh)",
+      fill = "type"
     ) +
     ggplot2::geom_text(
       data = top_input_days,
-      x = 1, y = avg_input, label = "Average",
+      x = 1, y = avg_input, label = "average",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
       data = top_input_days,
       x = 1, y = percentile_90_input,
-      label = "90th Percentile",
+      label = "90th percentile",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
       data = top_input_days,
       x = 1, y = percentile_10_input,
-      label = "10th Percentile",
+      label = "10th percentile",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
       data = top_output_days,
-      x = 1, y = avg_output, label = "Average",
+      x = 1, y = avg_output, label = "average",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
       data = top_output_days,
       x = 1, y = percentile_90_output,
-      label = "90th Percentile",
+      label = "90th percentile",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
       data = top_output_days,
       x = 1, y = percentile_10_output,
-      label = "10th Percentile",
+      label = "10th percentile",
       vjust = -1, hjust = 0
     ) +
-    ggplot2::theme_minimal() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
-      values = c(output_color, input_color)
+      values = c(input_color, output_color), guide = "none"
     )
 }
 
@@ -573,7 +572,7 @@ plot_top_days <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
-#' @return A ggplot object with a line chart.
+#' @return A ggplot object with a chart.
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
@@ -586,28 +585,35 @@ plot_top_days <- function(power_data, year_to_plot = 2024) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' plot_calendar_heatmap(power_data, 2000)
+#' plot_by_day_per_year_calendar_heatmap(power_data, 2000)
 #' @export
-plot_calendar_heatmap <- function(power_data, year_to_plot = 2024) {
-  calendaric_data <- get_calendaric_data(power_data, year_to_plot)
+plot_by_day_per_year_calendar_heatmap <- function(power_data, year_to_plot = 2024) {
+  daily_data <- get_daily_data_long(power_data, year_to_plot)
+
+  daily_input_data <- daily_data %>%
+    dplyr::filter(.data$type=="total_input")
+
+  daily_output_data <-daily_data %>% 
+    dplyr::filter(.data$type=="total_output")
+
   cowplot::plot_grid(
     calendR::calendR(
       year = year_to_plot,
-      special.days = calendaric_data$total_input,
-      gradient = TRUE,
-      special.col = "red",
-      low.col = "white",
-      start = "M",
-      title = "Input"
-    ),
-    calendR::calendR(
-      year = year_to_plot,
-      special.days = calendaric_data$total_output,
+      special.days = daily_input_data$value,
       gradient = TRUE,
       special.col = "blue",
       low.col = "white",
       start = "M",
-      title = "Output"
+      title = paste("input ", year_to_plot)
+    ),
+    calendR::calendR(
+      year = year_to_plot,
+      special.days = daily_output_data$value,
+      gradient = TRUE,
+      special.col = "red",
+      low.col = "white",
+      start = "M",
+      title = paste("output ", year_to_plot)
     )
   )
 }

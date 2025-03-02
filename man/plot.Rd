@@ -4,12 +4,14 @@
 \alias{plot}
 \title{Generic Plot Function}
 \usage{
-plot(plot_type, power_data, year_to_plot = 2024)
+plot(plot_type, power_data, display_mode = "dark", year_to_plot = 2024)
 }
 \arguments{
 \item{plot_type}{Character, the plot type from the dropdown menu.}
 
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
+
+\item{display_mode}{decides whether to plot dark or light.}
 
 \item{year_to_plot}{year for which to plot the dataframe.}
 }
@@ -31,5 +33,5 @@ power_data <- data.frame(
   INPUT = c(1.0, 2.0, 3.0, 4.0),
   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 )
-plot("by month", power_data, 2000)
+plot("by month", power_data, "light", 2000)
 }

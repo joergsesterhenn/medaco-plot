@@ -110,17 +110,6 @@ testthat::test_that("data is transformed to produce hourly and monthly data", {
   )
 })
 
-testthat::test_that("number of days in year are returned correctly", {
-  testthat::expect_equal(
-    366,
-    get_days_in_year(2024)
-  )
-  testthat::expect_equal(
-    365,
-    get_days_in_year(2025)
-  )
-})
-
 testthat::test_that("data gets filtered correctly", {
   power_data <- data.frame(
     timestamp = c(

@@ -193,8 +193,8 @@ testthat::test_that("data matching the plot is retrieved", {
     )
   testthat::expect_equal(
     expected_data_frame,
-    get_data_for_plot_function(
-      "plot_by_hour_per_year_bars",
+    get_data_for_plot_type(
+      "by hour per year (bars)",
       input_for_testing
     )
   )
@@ -216,8 +216,8 @@ testthat::test_that("data matching the plot is retrieved", {
     )
   testthat::expect_equal(
     expected_data_frame,
-    get_data_for_plot_function(
-      "plot_by_hour_per_month_lines",
+    get_data_for_plot_type(
+      "by hour per month (lines)",
       input_for_testing
     )
   )
@@ -237,8 +237,8 @@ testthat::test_that("data matching the plot is retrieved", {
     )
   testthat::expect_equal(
     expected_data_frame,
-    get_data_for_plot_function(
-      "plot_by_month_bars",
+    get_data_for_plot_type(
+      "by month (bars)",
       input_for_testing
     )
   )
@@ -258,8 +258,8 @@ testthat::test_that("data matching the plot is retrieved", {
     )
   testthat::expect_equal(
     expected_data_frame,
-    get_data_for_plot_function(
-      "plot_by_year_bars",
+    get_data_for_plot_type(
+      "by year (bars)",
       input_for_testing
     )
   )
@@ -280,16 +280,16 @@ testthat::test_that("data matching the plot is retrieved", {
   testthat::expect_equal(
     expected_data_frame,
     dplyr::filter(
-      get_data_for_plot_function(
-        "plot_by_day_per_year_top_10_bars",
+      get_data_for_plot_type(
+        "by day per year (top 10, bars)",
         input_for_testing
       ), .data$day == "2000-01-01"
     )
   )
   testthat::expect_equal(
     input_for_testing,
-    get_data_for_plot_function(
-      "plot_something_unknown",
+    get_data_for_plot_type(
+      "something unknown",
       input_for_testing
     )
   )

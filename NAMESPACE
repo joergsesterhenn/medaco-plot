@@ -2,7 +2,7 @@
 
 export("%>%")
 export(get_daily_data_long)
-export(get_data_for_plot_function)
+export(get_data_for_plot_type)
 export(get_data_for_year)
 export(get_files_in_path)
 export(get_hourly_data_long)

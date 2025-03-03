@@ -79,7 +79,7 @@ server <- function(input, output, session) {
   output$output_data <- DT::renderDT({
     shiny::req(filtered_inputdata())
     shiny::req(input$plot_type)
-    get_data_for_plot_function(plot_map[input$plot_type, "map"], filtered_inputdata())
+    get_data_for_plot_type(input$plot_type, filtered_inputdata())
   })
 
   # reactive plot output based on user selection

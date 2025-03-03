@@ -71,4 +71,4 @@ devtools::check()
 ```
 # Vorschau
 
-![Screenshot](https://github.com/joergsesterhenn/medaco-plot/blob/main/images/plot.png?raw=true)
+![Screenshot](https://github.com/joergsesterhenn/medaco-plot/blob/main/images/preview.gif?raw=true)

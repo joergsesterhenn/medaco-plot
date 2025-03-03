@@ -123,8 +123,8 @@
 <polyline points='30.05,419.80 32.79,419.80 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='30.05,364.90 32.79,364.90 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='30.05,309.99 32.79,309.99 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='335.17' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='23.85px' lengthAdjust='spacingAndGlyphs'>Hour</text>
-<text transform='translate(13.05,289.97) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='71.55px' lengthAdjust='spacingAndGlyphs'>Sum of Values</text>
+<text x='335.17' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='22.02px' lengthAdjust='spacingAndGlyphs'>hour</text>
+<text transform='translate(13.05,289.97) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='100.27px' lengthAdjust='spacingAndGlyphs'>sum of values (kWh)</text>
 <rect x='648.50' y='259.54' width='66.02' height='60.85' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='653.98' y='273.73' style='font-size: 11.00px; font-family: sans;' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>month</text>
 <rect x='653.98' y='280.35' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
@@ -133,6 +133,6 @@
 <rect x='654.69' y='298.34' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #FDE725; fill-opacity: 0.80;' />
 <text x='676.74' y='292.02' style='font-size: 8.80px; font-family: sans;' textLength='32.30px' lengthAdjust='spacingAndGlyphs'>2024-01</text>
 <text x='676.74' y='309.30' style='font-size: 8.80px; font-family: sans;' textLength='32.30px' lengthAdjust='spacingAndGlyphs'>2024-02</text>
-<text x='32.79' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='331.70px' lengthAdjust='spacingAndGlyphs'>Stacked Area Chart of Hourly Input and Output by Month</text>
+<text x='32.79' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='195.20px' lengthAdjust='spacingAndGlyphs'>by hour per month (stacked area)</text>
 </g>
 </svg>

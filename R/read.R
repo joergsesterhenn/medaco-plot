@@ -8,12 +8,10 @@
 #' get_files_in_path("data/")
 #' @export
 get_files_in_path <- function(data_path) {
-  return(
-    list.files(
-      path = data_path, recursive = TRUE,
-      pattern = "\\.CSV$",
-      full.names = TRUE
-    )
+  list.files(
+    path = data_path, recursive = TRUE,
+    pattern = "\\.CSV$",
+    full.names = TRUE
   )
 }
 

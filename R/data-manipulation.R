@@ -1,4 +1,5 @@
 library(magrittr)
+library(dplyr, warn.conflicts = FALSE)
 #' Get Hourly Data in Long Format
 #'
 #' Aggregates and reshapes the data by hour, returning it in a long format.
@@ -6,6 +7,7 @@ library(magrittr)
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A data frame with hourly `total_input` and `total_output` values.
 #' @importFrom dplyr group_by summarise
+#' @importFrom dplyr .data
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
@@ -55,29 +57,25 @@ get_hourly_data_long <- function(power_data) {
 #'   INPUT = c(1.0, 2.0, 3.0, 4.0),
 #'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
 #' )
-#' get_calendaric_data(power_data)
+#' get_daily_data_long(power_data)
 #' @export
-get_calendaric_data <- function(power_data, year_to_plot = 2024) {
+get_daily_data_long <- function(power_data, year_to_plot = 2024) {
   power_data %>%
-    dplyr::mutate(
-      yday = lubridate::yday(.data$timestamp),
-      year = lubridate::year(.data$timestamp),
-    ) %>%
-    get_data_for_year(year_to_plot) %>%
-    dplyr::group_by(.data$yday) %>%
+    dplyr::mutate(day = as.Date(.data$timestamp)) %>%
+    dplyr::group_by(.data$day) %>%
     dplyr::summarise(
       total_input = sum(.data$INPUT, na.rm = TRUE),
       total_output = sum(.data$OUTPUT, na.rm = TRUE),
       .groups = "drop"
     ) %>%
     tidyr::complete(
-      yday = seq(from = 1, to = get_days_in_year(year_to_plot), by = 1)
-    ) %>%
-    dplyr::mutate(
-      dplyr::across(
-        tidyr::starts_with("total"), \(x) tidyr::replace_na(x, 0)
+      day = seq(
+        from = as.Date(paste(year_to_plot, "-01-01", sep = "")),
+        to = as.Date(paste(year_to_plot, "-12-31", sep = "")),
+        by = "day"
       )
-    )
+    ) %>%
+    pivot_longer_data()
 }
 
 #' Get Monthly Data in Long Format
@@ -271,20 +269,4 @@ get_years_in_data <- function(power_data) {
 get_data_for_year <- function(power_data, selected_year) {
   power_data %>%
     dplyr::filter(lubridate::year(.data$timestamp) == selected_year)
-}
-
-#' Return the number of days for the given year.
-#'
-#' @param given_year year for which to return data.
-#' @return number of days in that year.
-#' @examples
-#' # Example
-#' get_days_in_year(2024)
-#' @export
-get_days_in_year <- function(given_year) {
-  if (lubridate::leap_year(strtoi(given_year))) {
-    366
-  } else {
-    365
-  }
 }

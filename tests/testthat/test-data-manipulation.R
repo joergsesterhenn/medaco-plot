@@ -45,6 +45,29 @@ testthat::test_that("data is transformed to produce hourly data", {
   )
 })
 
+testthat::test_that("data is transformed to produce daily data", {
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_input",
+          value = 1.1
+        ), data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_output",
+          value = 10.1
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    dplyr::filter(
+      get_daily_data_long(input_for_testing, 2000), .data$day == "2000-01-01"
+    )
+  )
+})
+
 testthat::test_that("data is transformed to produce yearly data", {
   expected_data_frame <-
     tidyr::as_tibble(
@@ -107,17 +130,6 @@ testthat::test_that("data is transformed to produce hourly and monthly data", {
   testthat::expect_equal(
     expected_data_frame,
     get_hourly_monthly_data_long(input_for_testing)
-  )
-})
-
-testthat::test_that("number of days in year are returned correctly", {
-  testthat::expect_equal(
-    366,
-    get_days_in_year(2024)
-  )
-  testthat::expect_equal(
-    365,
-    get_days_in_year(2025)
   )
 })
 

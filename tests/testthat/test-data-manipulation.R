@@ -45,6 +45,29 @@ testthat::test_that("data is transformed to produce hourly data", {
   )
 })
 
+testthat::test_that("data is transformed to produce daily data", {
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_input",
+          value = 1.1
+        ), data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_output",
+          value = 10.1
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    dplyr::filter(
+      get_daily_data_long(input_for_testing, 2000), .data$day == "2000-01-01"
+    )
+  )
+})
+
 testthat::test_that("data is transformed to produce yearly data", {
   expected_data_frame <-
     tidyr::as_tibble(

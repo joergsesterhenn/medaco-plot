@@ -4,12 +4,18 @@
 \alias{plot_by_hour_per_month_ridgelines}
 \title{Generate a Ridgeline Plot of Hourly Data by Month}
 \usage{
-plot_by_hour_per_month_ridgelines(power_data, year_to_plot = 2024)
+plot_by_hour_per_month_ridgelines(
+  power_data,
+  year_to_plot = 2024,
+  display_mode = "dark"
+)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 
 \item{year_to_plot}{year for which to plot the dataframe.}
+
+\item{display_mode}{year for which to plot the dataframe.}
 }
 \value{
 A ggplot object with a ridgeline plot.

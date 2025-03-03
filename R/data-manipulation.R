@@ -1,4 +1,5 @@
 library(magrittr)
+library(dplyr, warn.conflicts = FALSE)
 #' Get Hourly Data in Long Format
 #'
 #' Aggregates and reshapes the data by hour, returning it in a long format.
@@ -6,7 +7,7 @@ library(magrittr)
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @return A data frame with hourly `total_input` and `total_output` values.
 #' @importFrom dplyr group_by summarise
-#' @importFrom rlang .data
+#' @importFrom dplyr .data
 #' @examples
 #' # Example using a small sample data frame
 #' power_data <- data.frame(
@@ -59,7 +60,7 @@ get_hourly_data_long <- function(power_data) {
 #' get_daily_data_long(power_data)
 #' @export
 get_daily_data_long <- function(power_data, year_to_plot = 2024) {
-  daily_data <- power_data %>%
+  power_data %>%
     dplyr::mutate(day = as.Date(.data$timestamp)) %>%
     dplyr::group_by(.data$day) %>%
     dplyr::summarise(
@@ -68,7 +69,11 @@ get_daily_data_long <- function(power_data, year_to_plot = 2024) {
       .groups = "drop"
     ) %>%
     tidyr::complete(
-      day = seq(from = as.Date(paste(year_to_plot, "-01-01", sep = "")), to = as.Date(paste(year_to_plot, "-12-31", sep = "")), by = "day")
+      day = seq(
+        from = as.Date(paste(year_to_plot, "-01-01", sep = "")),
+        to = as.Date(paste(year_to_plot, "-12-31", sep = "")),
+        by = "day"
+      )
     ) %>%
     pivot_longer_data()
 }

@@ -23,6 +23,8 @@ plot_map <- data.frame(
 
 input_color <- "#add8e6"
 output_color <- "#e97171"
+dark_background_color <- "#1d1f21"
+strip_color <- "purple"
 
 #' Generic Plot Function
 #'
@@ -48,17 +50,31 @@ output_color <- "#e97171"
 #' )
 #' plot("by month", power_data, "light", 2000)
 #' @export
-plot <- function(plot_type, power_data, display_mode = "dark", year_to_plot = 2024) {
+plot <- function(
+    plot_type,
+    power_data,
+    display_mode = "dark",
+    year_to_plot = 2024) {
   function_name <- plot_map[plot_type, "map"]
-  get(function_name)(power_data, year_to_plot) +
+  get(function_name)(power_data, year_to_plot, display_mode) +
     get_theme(display_mode)
 }
 
 get_theme <- function(display_mode) {
   if (display_mode == "dark") {
-    ggdark::dark_theme_light(base_size = 20)
+    ggdark::dark_theme_light(base_size = 20) +
+      theme(plot.background = element_rect(
+        fill = dark_background_color, colour = dark_background_color
+      )) +
+      theme(panel.background = element_rect(
+        fill = dark_background_color, colour = dark_background_color
+      )) +
+      theme(legend.background = element_rect(
+        fill = dark_background_color, colour = dark_background_color
+      )) + theme(strip.background = element_rect(fill = strip_color))
   } else {
-    ggplot2::theme_light(base_size = 20)
+    ggplot2::theme_light(base_size = 20) +
+      theme(strip.background = element_rect(fill = strip_color))
   }
 }
 
@@ -73,6 +89,7 @@ get_theme <- function(display_mode) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object showing yearly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -89,7 +106,10 @@ get_theme <- function(display_mode) {
 #' )
 #' plot_by_year_bars(power_data)
 #' @export
-plot_by_year_bars <- function(power_data, year_to_plot = 2024) {
+plot_by_year_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_yearly_data_long() %>%
     ggplot2::ggplot(
@@ -119,6 +139,7 @@ plot_by_year_bars <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object showing monthly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -135,7 +156,10 @@ plot_by_year_bars <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_month_bars(power_data)
 #' @export
-plot_by_month_bars <- function(power_data, year_to_plot = 2024) {
+plot_by_month_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -159,6 +183,7 @@ plot_by_month_bars <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object showing hourly aggregated values.
 #' @importFrom rlang .data
 #' @examples
@@ -175,7 +200,10 @@ plot_by_month_bars <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_hour_per_year_bars(power_data)
 #' @export
-plot_by_hour_per_year_bars <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_year_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_data_long() %>%
     ggplot2::ggplot(
@@ -199,6 +227,7 @@ plot_by_hour_per_year_bars <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object showing hourly values by month in facets.
 #' @importFrom rlang .data
 #' @examples
@@ -215,7 +244,10 @@ plot_by_hour_per_year_bars <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_hour_per_month_bars(power_data)
 #' @export
-plot_by_hour_per_month_bars <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -240,6 +272,7 @@ plot_by_hour_per_month_bars <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object with a heatmap representing input/output.
 #' @importFrom rlang .data
 #' @examples
@@ -256,7 +289,10 @@ plot_by_hour_per_month_bars <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_hour_per_month_heatmap(power_data)
 #' @export
-plot_by_hour_per_month_heatmap <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_heatmap <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -280,6 +316,7 @@ plot_by_hour_per_month_heatmap <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode year for which to plot the dataframe.
 #' @return A ggplot object with a ridgeline plot.
 #' @importFrom rlang .data
 #' @examples
@@ -296,7 +333,10 @@ plot_by_hour_per_month_heatmap <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_hour_per_month_ridgelines(power_data)
 #' @export
-plot_by_hour_per_month_ridgelines <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_ridgelines <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -307,7 +347,7 @@ plot_by_hour_per_month_ridgelines <- function(power_data, year_to_plot = 2024) {
         fill = .data$type
       )
     ) +
-    ggridges::geom_density_ridges(stat = "identity", alpha = 0.5, scale = 0.9) +
+    ggridges::geom_density_ridges(stat = "identity", alpha = 0.8, scale = 0.9) +
     # ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
       title = "by hour per month (ridgeline)",
@@ -327,6 +367,7 @@ plot_by_hour_per_month_ridgelines <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object with a stacked area chart.
 #' @importFrom rlang .data
 #' @examples
@@ -343,7 +384,10 @@ plot_by_hour_per_month_ridgelines <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_hour_per_month_stacked_areas(power_data)
 #' @export
-plot_by_hour_per_month_stacked_areas <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_stacked_areas <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -371,6 +415,7 @@ plot_by_hour_per_month_stacked_areas <- function(power_data, year_to_plot = 2024
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object with a line chart.
 #' @importFrom rlang .data
 #' @examples
@@ -387,7 +432,10 @@ plot_by_hour_per_month_stacked_areas <- function(power_data, year_to_plot = 2024
 #' )
 #' plot_by_hour_per_month_lines(power_data)
 #' @export
-plot_by_hour_per_month_lines <- function(power_data, year_to_plot = 2024) {
+plot_by_hour_per_month_lines <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   power_data %>%
     get_hourly_monthly_data_long() %>%
     ggplot2::ggplot(
@@ -409,13 +457,13 @@ plot_by_hour_per_month_lines <- function(power_data, year_to_plot = 2024) {
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
 
-
 #' Generate a Bar Chart of top 10 days of power input vs output
 #'
 #' Creates a Bar Chart and also displays mean and percentile values.
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object with a chart.
 #' @importFrom rlang .data
 #' @importFrom stats quantile reorder
@@ -433,16 +481,19 @@ plot_by_hour_per_month_lines <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_day_per_year_top_10_bars(power_data)
 #' @export
-plot_by_day_per_year_top_10_bars <- function(power_data, year_to_plot = 2024) {
+plot_by_day_per_year_top_10_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   # Aggregate data by day
   daily_data <- power_data %>%
     get_daily_data_long(year_to_plot)
 
   daily_input_data <- daily_data %>%
-    dplyr::filter(.data$type=="total_input")
+    dplyr::filter(.data$type == "total_input")
 
-  daily_output_data <-daily_data %>% 
-    dplyr::filter(.data$type=="total_output")
+  daily_output_data <- daily_data %>%
+    dplyr::filter(.data$type == "total_output")
 
   # Identify top 10 days for input and output
   top_input_days <- daily_input_data %>%
@@ -572,6 +623,7 @@ plot_by_day_per_year_top_10_bars <- function(power_data, year_to_plot = 2024) {
 #'
 #' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
 #' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
 #' @return A ggplot object with a chart.
 #' @examples
 #' # Example using a small sample data frame
@@ -587,15 +639,25 @@ plot_by_day_per_year_top_10_bars <- function(power_data, year_to_plot = 2024) {
 #' )
 #' plot_by_day_per_year_calendar_heatmap(power_data, 2000)
 #' @export
-plot_by_day_per_year_calendar_heatmap <- function(power_data, year_to_plot = 2024) {
+plot_by_day_per_year_calendar_heatmap <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
   daily_data <- get_daily_data_long(power_data, year_to_plot)
 
   daily_input_data <- daily_data %>%
-    dplyr::filter(.data$type=="total_input")
+    dplyr::filter(.data$type == "total_input")
 
-  daily_output_data <-daily_data %>% 
-    dplyr::filter(.data$type=="total_output")
+  daily_output_data <- daily_data %>%
+    dplyr::filter(.data$type == "total_output")
 
+  if (display_mode == "dark") {
+    calendar_background <- dark_background_color
+    calendar_text_color <- "white"
+  } else {
+    calendar_background <- "white"
+    calendar_text_color <- "black"
+  }
   cowplot::plot_grid(
     calendR::calendR(
       year = year_to_plot,
@@ -604,7 +666,14 @@ plot_by_day_per_year_calendar_heatmap <- function(power_data, year_to_plot = 202
       special.col = "blue",
       low.col = "white",
       start = "M",
-      title = paste("input ", year_to_plot)
+      title = paste("input ", year_to_plot),
+      bg.col = calendar_background,
+      mbg.col = calendar_background,
+      text.col = calendar_text_color,
+      title.col = calendar_text_color,
+      subtitle.col = calendar_text_color,
+      weeknames.col = calendar_text_color,
+      months.col = calendar_text_color
     ),
     calendR::calendR(
       year = year_to_plot,
@@ -613,7 +682,14 @@ plot_by_day_per_year_calendar_heatmap <- function(power_data, year_to_plot = 202
       special.col = "red",
       low.col = "white",
       start = "M",
-      title = paste("output ", year_to_plot)
+      title = paste("output ", year_to_plot),
+      bg.col = calendar_background,
+      mbg.col = calendar_background,
+      text.col = calendar_text_color,
+      title.col = calendar_text_color,
+      subtitle.col = calendar_text_color,
+      weeknames.col = calendar_text_color,
+      months.col = calendar_text_color
     )
   )
 }

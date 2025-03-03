@@ -10,7 +10,6 @@ server <- function(input, output, session) {
       linux = "/", # Root directory for Linux
       home = "~" # Root directory for Home
     )
-    # Enable shinyFiles to interact with the file system
     shinyFiles::shinyDirChoose(
       input,
       "directory",
@@ -19,10 +18,9 @@ server <- function(input, output, session) {
       allowDirCreate = FALSE
     )
   }
-  # Reactive expression to read CSV files from the selected directory
+  # read CSV files
   inputdata <- shiny::reactive({
     if (Sys.getenv("MEDACO_DATA") == "") {
-      # Get the selected directory path
       shiny::req(input$directory)
       selected_directory <- shinyFiles::parseDirPath(
         roots = roots,
@@ -31,18 +29,12 @@ server <- function(input, output, session) {
     } else {
       selected_directory <- Sys.getenv("MEDACO_DATA")
     }
-    # Read and combine CSV files from the selected directory
+    # read and combine CSV files from the selected directory
     shiny::req(selected_directory)
     read_power_data(selected_directory)
   })
-  shiny::observe({
-    shiny::req(plot_map)
-    shiny::updateSelectInput(
-      session = session,
-      inputId = "plot_type",
-      choices = row.names(plot_map)
-    )
-  })
+
+  # react to change of year
   shiny::observe({
     shiny::req(inputdata())
     shiny::updateSelectInput(
@@ -52,6 +44,14 @@ server <- function(input, output, session) {
     )
   })
 
+  # filter inputdata for selected year
+  filtered_inputdata <- shiny::reactive({
+    shiny::req(inputdata())
+    shiny::req(input$year_to_plot)
+    get_data_for_year(inputdata(), input$year_to_plot)
+  })
+
+  # react to change in data
   shiny::observe({
     shiny::req(filtered_inputdata())
     shiny::req(input$year_to_plot)
@@ -65,12 +65,17 @@ server <- function(input, output, session) {
     )
   })
 
-  filtered_inputdata <- shiny::reactive({
-    shiny::req(inputdata())
-    shiny::req(input$year_to_plot)
-    get_data_for_year(inputdata(), input$year_to_plot)
+  # react to change of plot type
+  shiny::observe({
+    shiny::req(plot_map)
+    shiny::updateSelectInput(
+      session = session,
+      inputId = "plot_type",
+      choices = row.names(plot_map)
+    )
   })
 
+  # reactive data output based on user selection
   output$output_data <- DT::renderDT({
     shiny::req(filtered_inputdata())
     shiny::req(input$plot_type)
@@ -90,8 +95,7 @@ server <- function(input, output, session) {
     }
   })
 
-
-  # Reactive plot output based on user selection
+  # reactive plot output based on user selection
   output$plot <- shiny::renderPlot({
     shiny::req(filtered_inputdata())
     shiny::req(input$plot_type)

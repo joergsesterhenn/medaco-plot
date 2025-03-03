@@ -21,7 +21,10 @@ ui <- bslib::page_sidebar(
   ),
   bslib::navset_card_underline(
     title = "Visualization",
-    bslib::nav_panel("Plot", shiny::plotOutput("plot", fill = TRUE, height = "700px")),
+    bslib::nav_panel("Plot", shiny::plotOutput(
+      "plot",
+      fill = TRUE, height = "700px"
+    )),
     bslib::nav_panel("Data", DT::dataTableOutput(
       outputId = "output_data", width = "100%", height = "auto", fill = TRUE
     ))

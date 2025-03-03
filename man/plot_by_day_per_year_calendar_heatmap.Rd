@@ -4,12 +4,18 @@
 \alias{plot_by_day_per_year_calendar_heatmap}
 \title{Generate Calendar Heatmap Chart}
 \usage{
-plot_by_day_per_year_calendar_heatmap(power_data, year_to_plot = 2024)
+plot_by_day_per_year_calendar_heatmap(
+  power_data,
+  year_to_plot = 2024,
+  display_mode = "dark"
+)
 }
 \arguments{
 \item{power_data}{data frame with \code{timestamp}, \code{INPUT}, and \code{OUTPUT} columns.}
 
 \item{year_to_plot}{year for which to plot the dataframe.}
+
+\item{display_mode}{decides whether to plot dark or light.}
 }
 \value{
 A ggplot object with a chart.

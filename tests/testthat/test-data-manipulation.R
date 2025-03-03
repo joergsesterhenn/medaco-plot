@@ -155,7 +155,7 @@ testthat::test_that("data gets filtered correctly", {
   )
 })
 
-testthat::test_that("year are pulled from data correctly", {
+testthat::test_that("years are pulled from data correctly", {
   power_data <- data.frame(
     timestamp = c(
       as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),

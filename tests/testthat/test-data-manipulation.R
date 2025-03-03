@@ -154,3 +154,23 @@ testthat::test_that("data gets filtered correctly", {
     expected_power_data
   )
 })
+
+testthat::test_that("year are pulled from data correctly", {
+  power_data <- data.frame(
+    timestamp = c(
+      as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+      as.POSIXct("2001-01-02 01:00:00", tz = "UTC"),
+      as.POSIXct("2002-02-01 02:00:00", tz = "UTC"),
+      as.POSIXct("2003-02-02 02:00:00", tz = "UTC")
+    ),
+    total_input = c(1.0, 2.0, 3.0, 4.0),
+    total_output = c(4.0, 3.0, 2.0, 1.0)
+  )
+  expected_power_data <- data.frame(
+    year = c(2000, 2001, 2002, 2003)
+  )
+  testthat::expect_equal(
+    get_years_in_data(power_data),
+    expected_power_data
+  )
+})

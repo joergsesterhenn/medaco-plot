@@ -82,7 +82,7 @@ test_that("calendar heatmap plot renders as before", {
       new = c("LC_TIME" = "en_GB"),
       plot_by_day_per_year_calendar_heatmap(
         larger_input_for_testing,
-        display_mode = "light"
+        display_mode = "dark"
       )
     )
   )

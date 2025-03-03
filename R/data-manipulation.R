@@ -270,3 +270,38 @@ get_data_for_year <- function(power_data, selected_year) {
   power_data %>%
     dplyr::filter(lubridate::year(.data$timestamp) == selected_year)
 }
+
+#' Get data for plot function to present it next to the plot.
+#'
+#' @param function_name name of the selected plot function.
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @return A data frame with values matching the plot.
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' get_data_for_plot_function("plot_by_hour_per_month_lines", power_data)
+#' @export
+get_data_for_plot_function <- function(function_name, power_data) {
+  if (startsWith(function_name, "plot_by_year")) {
+    get_yearly_data_long(power_data)
+  } else if (startsWith(function_name, "plot_by_month")) {
+    get_monthly_data_long(power_data)
+  } else if (startsWith(function_name, "plot_by_day")) {
+    get_daily_data_long(power_data)
+  } else if (startsWith(function_name, "plot_by_hour_per_year")) {
+    get_hourly_data_long(power_data)
+  } else if (startsWith(function_name, "plot_by_hour_per_month")) {
+    get_hourly_monthly_data_long(power_data)
+  } else {
+    power_data
+  }
+}

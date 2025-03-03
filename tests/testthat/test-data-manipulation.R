@@ -174,3 +174,123 @@ testthat::test_that("years are pulled from data correctly", {
     expected_power_data
   )
 })
+
+
+testthat::test_that("data matching the plot is retrieved", {
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          hour = "01",
+          type = "total_input",
+          value = 56
+        ), data.frame(
+          hour = "01",
+          type = "total_output",
+          value = 56
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    get_data_for_plot_function(
+      "plot_by_hour_per_year_bars",
+      input_for_testing
+    )
+  )
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          month = "2000-01",
+          hour = "01",
+          type = "total_input",
+          value = 56
+        ), data.frame(
+          month = "2000-01",
+          hour = "01",
+          type = "total_output",
+          value = 56
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    get_data_for_plot_function(
+      "plot_by_hour_per_month_lines",
+      input_for_testing
+    )
+  )
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          year_month = "2000-01",
+          type = "total_input",
+          value = 56
+        ), data.frame(
+          year_month = "2000-01",
+          type = "total_output",
+          value = 56
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    get_data_for_plot_function(
+      "plot_by_month_bars",
+      input_for_testing
+    )
+  )
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          year = "2000",
+          type = "total_input",
+          value = 56
+        ), data.frame(
+          year = "2000",
+          type = "total_output",
+          value = 56
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    get_data_for_plot_function(
+      "plot_by_year_bars",
+      input_for_testing
+    )
+  )
+  expected_data_frame <-
+    tidyr::as_tibble(
+      rbind(
+        data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_input",
+          value = 1.1
+        ), data.frame(
+          day = as.Date("2000-01-01"),
+          type = "total_output",
+          value = 10.1
+        )
+      )
+    )
+  testthat::expect_equal(
+    expected_data_frame,
+    dplyr::filter(
+      get_data_for_plot_function(
+        "plot_by_day_per_year_top_10_bars",
+        input_for_testing
+      ), .data$day == "2000-01-01"
+    )
+  )
+  testthat::expect_equal(
+    input_for_testing,
+    get_data_for_plot_function(
+      "plot_something_unknown",
+      input_for_testing
+    )
+  )
+})

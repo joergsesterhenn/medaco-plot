@@ -1,3 +1,9 @@
+# medacoPlot 1.0.0
+
+- first stable version
+- visualize power data to gain insights or search in data for details
+- supports darkmode in ui and plots
+
 # medacoPlot 0.3.0
 
 - major redesign of the app 

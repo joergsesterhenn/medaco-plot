@@ -1,4 +1,5 @@
 ui <- bslib::page_sidebar(
+  outputId = "main",
   title = i18n$t("Power input and output analysis of medaco data"),
   shiny.i18n::usei18n(i18n),
   sidebar = bslib::sidebar(
@@ -8,7 +9,7 @@ ui <- bslib::page_sidebar(
     shiny::selectInput(
       inputId = "selected_language",
       label = i18n$t("Select language"),
-      choices = setNames(
+      choices = stats::setNames(
         i18n$get_languages(),
         c("\U0001F1EC\U0001F1E7 English", "\U0001F1E9\U0001F1EA Deutsch")
       ),

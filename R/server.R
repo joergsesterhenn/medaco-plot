@@ -79,7 +79,10 @@ server <- function(input, output, session) {
     shiny::updateSelectInput(
       session = session,
       inputId = "plot_type",
-      choices = setNames(row.names(plot_map), i18n$t(row.names(plot_map)))
+      choices = stats::setNames(
+        row.names(plot_map),
+        i18n$t(row.names(plot_map))
+      )
     )
   })
 

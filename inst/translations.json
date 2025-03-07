@@ -69,6 +69,10 @@
             "de": "Jahr"
         },
         {
+            "en": "day",
+            "de": "Tag"
+        },
+        {
             "en": "month",
             "de": "Monat"
         },
@@ -131,6 +135,14 @@
         {
             "en": "type",
             "de": "Typ"
+        },
+        {
+            "en": "th percentile",
+            "de": ". Perzentil"
+        },
+        {
+            "en": "en_US.UTF-8",
+            "de": "de_DE.UTF-8"
         }
     ]
 }

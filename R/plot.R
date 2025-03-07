@@ -117,9 +117,10 @@ plot_by_year_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = i18n$t("by year"),
+      title = i18n$t("by year (bars)"),
       x = i18n$t("year"),
-      y = i18n$t("sum of values (kWh)")
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -167,9 +168,10 @@ plot_by_month_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = i18n$t("by month"),
+      title = i18n$t("by month (bars)"),
       x = i18n$t("month"),
-      y = i18n$t("sum of values (kWh)")
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -211,9 +213,10 @@ plot_by_hour_per_year_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = i18n$t("by hour"),
+      title = i18n$t("by hour per year (bars)"),
       x = i18n$t("hour"),
-      y = i18n$t("sum of values (kWh)")
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -256,9 +259,10 @@ plot_by_hour_per_month_bars <- function(
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::facet_wrap(~month, ncol = 3) +
     ggplot2::labs(
-      title = i18n$t("by hour per month"),
+      title = i18n$t("by hour per month (bars)"),
       x = i18n$t("hour"),
-      y = i18n$t("sum of values (kWh)")
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -348,11 +352,11 @@ plot_by_hour_per_month_ridgelines <- function(
       )
     ) +
     ggridges::geom_density_ridges(stat = "identity", alpha = 0.8, scale = 0.9) +
-    # ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = i18n$t("by hour per month (ridgeline)"),
+      title = i18n$t("by hour per month (ridgelines)"),
       x = i18n$t("hour"),
-      y = i18n$t("month")
+      y = i18n$t("month"),
+      fill = i18n$t("type")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -401,9 +405,10 @@ plot_by_hour_per_month_stacked_areas <- function(
     ggplot2::geom_area(position = "stack", alpha = 0.8) +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = i18n$t("by hour per month (stacked area)"),
+      title = i18n$t("by hour per month (stacked areas)"),
       x = i18n$t("hour"),
-      y = i18n$t("sum of values (kWh)")
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("month")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_viridis_d() # Use a color gradient to distinguish months
@@ -536,36 +541,42 @@ plot_by_day_per_year_top_10_bars <- function(
     ggplot2::geom_col() +
     ggplot2::facet_wrap(~ .data$type, scales = "free_x") +
     ggplot2::geom_hline(
+      color = "black",
       data = top_input_days,
       ggplot2::aes(yintercept = avg_input),
       linetype = "dashed",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
+      color = "black",
       data = top_input_days,
       ggplot2::aes(yintercept = percentile_90_input),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
+      color = "black",
       data = top_input_days,
       ggplot2::aes(yintercept = percentile_10_input),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
+      color = "black",
       data = top_output_days,
       ggplot2::aes(yintercept = avg_output),
       linetype = "dashed",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
+      color = "black",
       data = top_output_days,
       ggplot2::aes(yintercept = percentile_90_output),
       linetype = "dotted",
       linewidth = 1
     ) +
     ggplot2::geom_hline(
+      color = "black",
       data = top_output_days,
       ggplot2::aes(yintercept = percentile_10_output),
       linetype = "dotted",
@@ -578,37 +589,43 @@ plot_by_day_per_year_top_10_bars <- function(
       fill = i18n$t("type")
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_input_days,
       x = 1, y = avg_input, label = "average",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_input_days,
       x = 1, y = percentile_90_input,
-      label = "90th percentile",
+      label = paste("90", i18n$t("th percentile")),
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_input_days,
       x = 1, y = percentile_10_input,
-      label = "10th percentile",
+      label = paste("10", i18n$t("th percentile")),
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_output_days,
       x = 1, y = avg_output, label = "average",
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_output_days,
       x = 1, y = percentile_90_output,
-      label = "90th percentile",
+      label = paste("90", i18n$t("th percentile")),
       vjust = -1, hjust = 0
     ) +
     ggplot2::geom_text(
+      color = "black",
       data = top_output_days,
       x = 1, y = percentile_10_output,
-      label = "10th percentile",
+      label = paste("10", i18n$t("th percentile")),
       vjust = -1, hjust = 0
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
@@ -658,38 +675,40 @@ plot_by_day_per_year_calendar_heatmap <- function(
     calendar_background <- "white"
     calendar_text_color <- "black"
   }
-  cowplot::plot_grid(
-    calendR::calendR(
-      year = year_to_plot,
-      special.days = daily_input_data$value,
-      gradient = TRUE,
-      special.col = "blue",
-      low.col = "white",
-      start = "M",
-      title = paste("input ", year_to_plot),
-      bg.col = calendar_background,
-      mbg.col = calendar_background,
-      text.col = calendar_text_color,
-      title.col = calendar_text_color,
-      subtitle.col = calendar_text_color,
-      weeknames.col = calendar_text_color,
-      months.col = calendar_text_color
-    ),
-    calendR::calendR(
-      year = year_to_plot,
-      special.days = daily_output_data$value,
-      gradient = TRUE,
-      special.col = "red",
-      low.col = "white",
-      start = "M",
-      title = paste("output ", year_to_plot),
-      bg.col = calendar_background,
-      mbg.col = calendar_background,
-      text.col = calendar_text_color,
-      title.col = calendar_text_color,
-      subtitle.col = calendar_text_color,
-      weeknames.col = calendar_text_color,
-      months.col = calendar_text_color
+  withr::with_locale(new = c("LC_TIME" = clean_fun(i18n$t("en_US.UTF-8"))), {
+    cowplot::plot_grid(
+      calendR::calendR(
+        year = year_to_plot,
+        special.days = daily_input_data$value,
+        gradient = TRUE,
+        special.col = "blue",
+        low.col = "white",
+        start = "M",
+        title = paste("Input ", year_to_plot),
+        bg.col = calendar_background,
+        mbg.col = calendar_background,
+        text.col = calendar_text_color,
+        title.col = calendar_text_color,
+        subtitle.col = calendar_text_color,
+        weeknames.col = calendar_text_color,
+        months.col = calendar_text_color
+      ),
+      calendR::calendR(
+        year = year_to_plot,
+        special.days = daily_output_data$value,
+        gradient = TRUE,
+        special.col = "red",
+        low.col = "white",
+        start = "M",
+        title = paste("Output ", year_to_plot),
+        bg.col = calendar_background,
+        mbg.col = calendar_background,
+        text.col = calendar_text_color,
+        title.col = calendar_text_color,
+        subtitle.col = calendar_text_color,
+        weeknames.col = calendar_text_color,
+        months.col = calendar_text_color
+      )
     )
-  )
+  })
 }

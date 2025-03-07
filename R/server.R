@@ -3,6 +3,11 @@ server <- function(input, output, session) {
   source("plot.R", local = TRUE)
   source("data-manipulation.R", local = TRUE)
 
+  shiny::observeEvent(input$selected_language, {
+    shiny.i18n::update_lang(
+      language = input$selected_language
+    )
+  })
 
   if (Sys.getenv("MEDACO_DATA") == "") {
     roots <- c(
@@ -58,7 +63,10 @@ server <- function(input, output, session) {
     number_of_rows <- nrow(filtered_inputdata())
     shiny::showNotification(
       paste(
-        "Showing ", number_of_rows, " datapoints for ", input$year_to_plot, "."
+        i18n$t("Showing "),
+        number_of_rows,
+        i18n$t(" datapoints for "),
+        input$year_to_plot, "."
       ),
       type = "message",
       duration = 5
@@ -71,7 +79,7 @@ server <- function(input, output, session) {
     shiny::updateSelectInput(
       session = session,
       inputId = "plot_type",
-      choices = row.names(plot_map)
+      choices = setNames(row.names(plot_map), i18n$t(row.names(plot_map)))
     )
   })
 

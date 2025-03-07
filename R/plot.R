@@ -117,9 +117,9 @@ plot_by_year_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "by year",
-      x = "year",
-      y = "sum of values (kWh)"
+      title = i18n$t("by year"),
+      x = i18n$t("year"),
+      y = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -167,9 +167,9 @@ plot_by_month_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "by month",
-      x = "month",
-      y = "sum of values (kWh)"
+      title = i18n$t("by month"),
+      x = i18n$t("month"),
+      y = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -211,9 +211,9 @@ plot_by_hour_per_year_bars <- function(
     ) +
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::labs(
-      title = "by hour",
-      x = "hour",
-      y = "sum of values (kWh)"
+      title = i18n$t("by hour"),
+      x = i18n$t("hour"),
+      y = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -256,9 +256,9 @@ plot_by_hour_per_month_bars <- function(
     ggplot2::geom_bar(stat = "identity", position = "dodge") +
     ggplot2::facet_wrap(~month, ncol = 3) +
     ggplot2::labs(
-      title = "by hour per month",
-      x = "hour",
-      y = "sum of values (kWh)"
+      title = i18n$t("by hour per month"),
+      x = i18n$t("hour"),
+      y = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -302,10 +302,10 @@ plot_by_hour_per_month_heatmap <- function(
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::scale_fill_gradient(low = "white", high = "blue") +
     ggplot2::labs(
-      title = "by hour per month (heatmap)",
-      x = "hour",
-      y = "month",
-      fill = "sum of values (kWh)"
+      title = i18n$t("by hour per month (heatmap)"),
+      x = i18n$t("hour"),
+      y = i18n$t("month"),
+      fill = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
@@ -350,9 +350,9 @@ plot_by_hour_per_month_ridgelines <- function(
     ggridges::geom_density_ridges(stat = "identity", alpha = 0.8, scale = 0.9) +
     # ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "by hour per month (ridgeline)",
-      x = "hour",
-      y = "month"
+      title = i18n$t("by hour per month (ridgeline)"),
+      x = i18n$t("hour"),
+      y = i18n$t("month")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
@@ -401,9 +401,9 @@ plot_by_hour_per_month_stacked_areas <- function(
     ggplot2::geom_area(position = "stack", alpha = 0.8) +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "by hour per month (stacked area)",
-      x = "hour",
-      y = "sum of values (kWh)"
+      title = i18n$t("by hour per month (stacked area)"),
+      x = i18n$t("hour"),
+      y = i18n$t("sum of values (kWh)")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_viridis_d() # Use a color gradient to distinguish months
@@ -449,10 +449,10 @@ plot_by_hour_per_month_lines <- function(
     ggplot2::geom_line() +
     ggplot2::facet_wrap(~type, ncol = 1) +
     ggplot2::labs(
-      title = "by hour per month (linechart)",
-      x = "hour",
-      y = "sum of values (kWh)",
-      color = "month"
+      title = i18n$t("by hour per month (lines)"),
+      x = i18n$t("hour"),
+      y = i18n$t("sum of values (kWh)"),
+      color = i18n$t("month")
     ) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
@@ -572,10 +572,10 @@ plot_by_day_per_year_top_10_bars <- function(
       linewidth = 1
     ) +
     ggplot2::labs(
-      title = "by day (top 10, bars)",
-      x = "day",
-      y = "sum of values (kWh)",
-      fill = "type"
+      title = i18n$t("by day per year (top 10, bars)"),
+      x = i18n$t("day"),
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
     ) +
     ggplot2::geom_text(
       data = top_input_days,

@@ -211,10 +211,10 @@ get_hourly_monthly_data_long <- function(power_data) {
 #' )
 #' pivot_longer_data(power_data)
 #' @export
-pivot_longer_data <- function(power_data) {
+pivot_longer_data <- function(power_data, cols = c("total_input", "total_output")) {
   tidyr::pivot_longer(
     data = power_data,
-    cols = c("total_input", "total_output"),
+    cols = cols,
     names_to = "type",
     values_to = "value"
   )

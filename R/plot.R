@@ -17,7 +17,8 @@ plot_map <- data.frame(
     "by hour per month (heatmap)" = "plot_by_hour_per_month_heatmap",
     "by hour per month (lines)" = "plot_by_hour_per_month_lines",
     "by hour per month (ridgelines)" = "plot_by_hour_per_month_ridgelines",
-    "by hour per month (stacked areas)" = "plot_by_hour_per_month_stacked_areas"
+    "by hour per month (stacked areas)" = "plot_by_hour_per_month_stacked_areas",
+    "continuous (line)" = "plot_continuous_line"
   )
 )
 
@@ -82,6 +83,55 @@ get_theme <- function(display_mode) {
 # implement new plot functions below and add them
 # to the list above to have them appear in the ui
 ##################################################
+
+#' Plot Data as line chart
+#'
+#' Generates a line plot showing input and output data.
+#'
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
+#' @return A ggplot object showing yearly aggregated values.
+#' @importFrom rlang .data
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' plot_continuous_line(power_data)
+#' @export
+plot_continuous_line <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  power_data %>%
+    pivot_longer_data(cols= c("INPUT", "OUTPUT")) %>%
+    ggplot2::ggplot(aes(x = timestamp, y = value, color = type)) +
+    ggplot2::geom_line() +
+    ggplot2::labs(
+      title = i18n$t("continuous (line)"),
+      x = i18n$t("time"),
+      y = i18n$t("value (kWh)"),
+      color = i18n$t("type")
+    ) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::scale_color_manual(
+      values = c("INPUT" = input_color, "OUTPUT" = output_color)
+    )+
+    ggplot2::scale_x_datetime(
+      date_breaks = "1 month",
+      date_labels = "%b",
+      minor_breaks = "1 day"
+    )
+}
+
 
 #' Plot Aggregated Data by Year
 #'

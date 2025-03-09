@@ -143,6 +143,18 @@
         {
             "en": "en_US.UTF-8",
             "de": "de_DE.UTF-8"
+        },
+        {
+            "en": "time",
+            "de": "Zeit"
+        },
+        {
+            "en": "values (kWh)",
+            "de": "Werte (kWh)"
+        },
+        {
+            "en": "continuous (line)",
+            "de": "kontinuierlich (Linie)"
         }
     ]
 }

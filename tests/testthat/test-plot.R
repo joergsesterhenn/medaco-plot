@@ -76,6 +76,9 @@ test_that("First plot from plot_map renders as before", {
 
 #' @importFrom rlang .data
 test_that("calendar heatmap plot renders as before", {
+  local_mocked_bindings(
+    clean_fun = function(x) "en_US.UTF-8"
+  )
   vdiffr::expect_doppelganger(
     "A calendar heatmap plot",
     plot_by_day_per_year_calendar_heatmap(

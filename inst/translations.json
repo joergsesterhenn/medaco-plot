@@ -1,0 +1,148 @@
+{
+    "languages": [
+        "en",
+        "de"
+    ],
+    "translation": [
+        {
+            "en": "Power input and output analysis of medaco data",
+            "de": "Analyse der medaco Einspeise- und Lieferdaten"
+        },
+        {
+            "en": "Select Folder",
+            "de": "Ordner auswählen"
+        },
+        {
+            "en": "Please select folder containing data",
+            "de": "Bitte wählen Sie den Ordner mit den Daten aus"
+        },
+        {
+            "en": "Select language",
+            "de": "Sprache auswählen"
+        },
+        {
+            "en": "Select year",
+            "de": "Jahr auswählen"
+        },
+        {
+            "en": "Select plot type",
+            "de": "Diagrammtyp auswählen"
+        },
+        {
+            "en": "Showing ",
+            "de": "Zeige "
+        },
+        {
+            "en": " datapoints for ",
+            "de": " Datenpunkte für "
+        },
+        {
+            "en": "Power Data Plot",
+            "de": "Leistungsdaten-Diagramm"
+        },
+        {
+            "en": "Time",
+            "de": "Zeit"
+        },
+        {
+            "en": "Power",
+            "de": "Leistung"
+        },
+        {
+            "en": "by year",
+            "de": "nach Jahren"
+        },
+        {
+            "en": "by month",
+            "de": "nach Monaten"
+        },
+        {
+            "en": "sum of values (kWh)",
+            "de": "Summe der Werte (kWh)"
+        },
+        {
+            "en": "by hour",
+            "de": "nach Stunden"
+        },
+        {
+            "en": "year",
+            "de": "Jahr"
+        },
+        {
+            "en": "day",
+            "de": "Tag"
+        },
+        {
+            "en": "month",
+            "de": "Monat"
+        },
+        {
+            "en": "hour",
+            "de": "Stunde"
+        },
+        {
+            "en": "Data",
+            "de": "Daten"
+        },
+        {
+            "en": "Plot",
+            "de": "Diagramm"
+        },
+        {
+            "en": "by year (bars)",
+            "de": "nach Jahren (Balken)"
+        },
+        {
+            "en": "by month (bars)",
+            "de": "nach Monaten (Balken)"
+        },
+        {
+            "en": "by day per year (heatmap)",
+            "de": "nach Tag pro Jahr (Heatmap)"
+        },
+        {
+            "en": "by day per year (top 10, bars)",
+            "de": "nach Tag pro Jahr (Top 10, Balken)"
+        },
+        {
+            "en": "by hour per year (bars)",
+            "de": "nach Stunde pro Jahr (Balken)"
+        },
+        {
+            "en": "by hour per month (bars)",
+            "de": "nach Stunde pro Monat (Balken)"
+        },
+        {
+            "en": "by hour per month (heatmap)",
+            "de": "nach Stunde pro Monat (Heatmap)"
+        },
+        {
+            "en": "by hour per month (lines)",
+            "de": "nach Stunde pro Monat (Linien)"
+        },
+        {
+            "en": "by hour per month (ridgelines)",
+            "de": "nach Stunde pro Monat (Kammlinien)"
+        },
+        {
+            "en": "by hour per month (stacked areas)",
+            "de": "nach Stunde pro Monat (gestapelte Flächen)"
+        },
+        {
+            "en": "Visualization",
+            "de": "Anzeige"
+        },
+        {
+            "en": "type",
+            "de": "Typ"
+        },
+        {
+            "en": "th percentile",
+            "de": ". Perzentil"
+        },
+        {
+            "en": "en_US.UTF-8",
+            "de": "de_DE.UTF-8"
+        }
+    ]
+}

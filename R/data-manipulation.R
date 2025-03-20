@@ -78,6 +78,60 @@ get_daily_data_long <- function(power_data, year_to_plot = 2024) {
     pivot_longer_data()
 }
 
+
+#' Get Weather Data from dwd per day
+#'
+#' @param year_to_plot year for which to return data
+#' @param station_id id of the weather station, defaults to 766 (Buechel)
+#' @param data_type type of data, possible Values include
+#' * QN_3
+#' * FX.Windspitze
+#' * FM.Windgeschwindigkeit
+#' * QN_4
+#' * RSK.Niederschlagshoehe
+#' * RSKF.Niederschlagsform
+#' * SDK.Sonnenscheindauer
+#' * SHK_TAG.Schneehoehe
+#' * NM.Bedeckungsgrad
+#' * VPM.Dampfdruck
+#' * PM.Luftdruck
+#' * TMK.Lufttemperatur (default)
+#' * UPM.Relative_Feuchte
+#' * TXK.Lufttemperatur_Max
+#' * TNK.Lufttemperatur_Min
+#' * TGK.Lufttemperatur_5cm_min
+#' * eor
+#'
+#' @return A data frame with daily values for a year.
+get_weather_data <- function(
+    year_to_plot = 2024,
+    station_id = 766,
+    data_type = "TMK.Lufttemperatur") {
+  rdwd::selectDWD(
+    id = station_id,
+    res = "daily",
+    var = "kl",
+    per = "r" # recent only (no historic data - "rh" would be both)
+  ) %>%
+    rdwd::dataDWD(
+      read = TRUE,
+      dir = "DWDdata",
+      varnames = TRUE
+    ) %>%
+    dplyr::filter(lubridate::year(.data$MESS_DATUM) == year_to_plot) %>%
+    dplyr::mutate("day" = as.Date(.data$MESS_DATUM)) %>%
+    dplyr::rename(value = data_type) %>%
+    dplyr::select(.data$day, .data$value) %>%
+    tidyr::complete(
+      day = seq(
+        from = as.Date(paste(year_to_plot, "-01-01", sep = "")),
+        to = as.Date(paste(year_to_plot, "-12-31", sep = "")),
+        by = "day"
+      )
+    )
+}
+
+
 #' Get Monthly Data in Long Format
 #'
 #' Aggregates and reshapes the data by month, returning it in a long format.
@@ -211,7 +265,9 @@ get_hourly_monthly_data_long <- function(power_data) {
 #' )
 #' pivot_longer_data(power_data)
 #' @export
-pivot_longer_data <- function(power_data, cols = c("total_input", "total_output")) {
+pivot_longer_data <- function(
+    power_data,
+    cols = c("total_input", "total_output")) {
   tidyr::pivot_longer(
     data = power_data,
     cols = cols,

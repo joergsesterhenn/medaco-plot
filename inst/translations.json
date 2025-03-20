@@ -153,8 +153,16 @@
             "de": "Werte (kWh)"
         },
         {
-            "en": "continuous (line)",
-            "de": "kontinuierlich (Linie)"
+            "en": "by day per year (line)",
+            "de": "nach Tag pro Jahr (Linie)"
+        },
+        {
+            "en": "Weather",
+            "de": "Wetter"
+        },
+        {
+            "en": "temperature (°C)",
+            "de": "Temperatur (°C)"
         }
     ]
 }

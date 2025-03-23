@@ -163,6 +163,26 @@
         {
             "en": "temperature (°C)",
             "de": "Temperatur (°C)"
+        },
+        {
+            "en": "by weekday",
+            "de": "nach Wochentag"
+        },
+        {
+            "en": "by weekday (bars)",
+            "de": "nach Wochentag (Balken)"
+        },
+        {
+            "en": "weekday",
+            "de": "Wochentag"
+        },
+        {
+            "en": "by hour type",
+            "de": "nach Stundentyp"
+        },
+        {
+            "en": "htype",
+            "de": "Stundentyp"
         }
     ]
 }

@@ -36,6 +36,41 @@ get_hourly_data_long <- function(power_data) {
     pivot_longer_data()
 }
 
+get_octopus_heat_data_long <- function(power_data) {
+  power_data %>%
+    dplyr::mutate(hour = lubridate::hour(power_data$timestamp)) %>%
+    dplyr::mutate(htype = dplyr::case_when(
+      .$hour %in% c(2:6, 12:16) ~ "cheap",
+      .$hour %in% c(18:21) ~ "expensive",
+      TRUE ~ "normal"
+    )) %>%
+    dplyr::select("htype", "INPUT", "OUTPUT") %>%
+    dplyr::group_by(.data$htype) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_longer_data()
+}
+
+get_weekday_data_long <- function(power_data) {
+  power_data %>%
+    dplyr::mutate(weekday = lubridate::wday(
+      power_data$timestamp,
+      label = TRUE, week_start = getOption("lubridate.week.start", 1),
+    )) %>%
+    dplyr::select("weekday", "INPUT", "OUTPUT") %>%
+    dplyr::group_by(.data$weekday) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_longer_data()
+}
+
+
 #' Get Daily Data in Long Format
 #'
 #' Aggregates and reshapes the data by day, returning it in a long format.
@@ -351,12 +386,16 @@ get_data_for_plot_type <- function(plot_type, power_data) {
     get_yearly_data_long(power_data)
   } else if (startsWith(plot_type, "by month")) {
     get_monthly_data_long(power_data)
+  } else if (startsWith(plot_type, "by weekday")) {
+    get_weekday_data_long(power_data)
   } else if (startsWith(plot_type, "by day")) {
     get_daily_data_long(power_data)
   } else if (startsWith(plot_type, "by hour per year")) {
     get_hourly_data_long(power_data)
   } else if (startsWith(plot_type, "by hour per month")) {
     get_hourly_monthly_data_long(power_data)
+  } else if (startsWith(plot_type, "by hour type")) {
+    get_octopus_heat_data_long(power_data)
   } else {
     power_data
   }

@@ -20,7 +20,11 @@ plot_map <- data.frame(
     "by hour per month (ridgelines)" =
       "plot_by_hour_per_month_ridgelines",
     "by hour per month (stacked areas)" =
-      "plot_by_hour_per_month_stacked_areas"
+      "plot_by_hour_per_month_stacked_areas",
+    "by hour type" =
+      "plot_by_hour_type_bars",
+    "by weekday" =
+      "plot_by_weekday_bars"
   )
 )
 
@@ -297,6 +301,36 @@ plot_by_hour_per_year_bars <- function(
       values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
+
+
+plot_by_hour_type_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  power_data %>%
+    get_octopus_heat_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$htype, y = .data$value, fill = .data$type)
+    ) +
+    ggplot2::geom_bar(stat = "identity", position = "dodge") +
+    ggplot2::labs(
+      title = i18n$t("by hour type (bars)"),
+      x = i18n$t("htype"),
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c("total_input" = input_color, "total_output" = output_color)
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(label = round(.data$value, digits = 0)),
+      vjust = 1.5,
+      position = ggplot2::position_dodge(.9),
+      colour = "black"
+    )
+}
+
+
 
 #' Plot Hourly Data by Month
 #'
@@ -779,4 +813,25 @@ plot_by_day_per_year_calendar_heatmap <- function(
       )
     )
   })
+}
+
+plot_by_weekday_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  power_data %>%
+    get_weekday_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$weekday, y = .data$value, fill = .data$type)
+    ) +
+    ggplot2::geom_bar(stat = "identity", position = "dodge") +
+    ggplot2::labs(
+      title = i18n$t("by weekday (bars)"),
+      x = i18n$t("weekday"),
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c("total_input" = input_color, "total_output" = output_color)
+    )
 }

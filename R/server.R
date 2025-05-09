@@ -1,3 +1,5 @@
+#' @import %>% from magrittr
+#' @import .data %>% from dployer
 server <- function(input, output, session) {
   source("read.R", local = TRUE)
   source("plot.R", local = TRUE)
@@ -38,14 +40,18 @@ server <- function(input, output, session) {
     shiny::req(selected_directory)
     read_power_data(selected_directory)
   })
+  years_in_data <- shiny::reactive({
+    shiny::req(inputdata())
+    get_years_in_data(inputdata())
+  })
 
   # react to change of year
   shiny::observe({
-    shiny::req(inputdata())
+    shiny::req(years_in_data())
     shiny::updateSelectInput(
       session = session,
       inputId = "year_to_plot",
-      choices = get_years_in_data(inputdata())
+      choices = years_in_data()
     )
   })
 
@@ -106,4 +112,5 @@ server <- function(input, output, session) {
       input$year_to_plot
     )
   })
+
 }

@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"rdebugger.r-debugger",
+			"mechatroner.rainbow-csv",
+			"posit.shiny",
+			"reditorsupport.r",
+			"ms-azuretools.vscode-docker",
+			"github.vscode-github-actions"
+		]
+	}
+}

@@ -36,6 +36,41 @@ get_hourly_data_long <- function(power_data) {
     pivot_longer_data()
 }
 
+get_octopus_heat_data_long <- function(power_data) {
+  power_data %>%
+    dplyr::mutate(hour = lubridate::hour(power_data$timestamp)) %>%
+    dplyr::mutate(htype = dplyr::case_when(
+      .$hour %in% c(2:6, 12:16) ~ "cheap",
+      .$hour %in% c(18:21) ~ "expensive",
+      TRUE ~ "normal"
+    )) %>%
+    dplyr::select("htype", "INPUT", "OUTPUT") %>%
+    dplyr::group_by(.data$htype) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_longer_data()
+}
+
+get_weekday_data_long <- function(power_data) {
+  power_data %>%
+    dplyr::mutate(weekday = lubridate::wday(
+      power_data$timestamp,
+      label = TRUE, week_start = getOption("lubridate.week.start", 1),
+    )) %>%
+    dplyr::select("weekday", "INPUT", "OUTPUT") %>%
+    dplyr::group_by(.data$weekday) %>%
+    dplyr::summarise(
+      total_input = sum(.data$INPUT, na.rm = TRUE),
+      total_output = sum(.data$OUTPUT, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_longer_data()
+}
+
+
 #' Get Daily Data in Long Format
 #'
 #' Aggregates and reshapes the data by day, returning it in a long format.
@@ -77,6 +112,60 @@ get_daily_data_long <- function(power_data, year_to_plot = 2024) {
     ) %>%
     pivot_longer_data()
 }
+
+
+#' Get Weather Data from dwd per day
+#'
+#' @param year_to_plot year for which to return data
+#' @param station_id id of the weather station, defaults to 766 (Buechel)
+#' @param data_type type of data, possible Values include
+#' * QN_3
+#' * FX.Windspitze
+#' * FM.Windgeschwindigkeit
+#' * QN_4
+#' * RSK.Niederschlagshoehe
+#' * RSKF.Niederschlagsform
+#' * SDK.Sonnenscheindauer
+#' * SHK_TAG.Schneehoehe
+#' * NM.Bedeckungsgrad
+#' * VPM.Dampfdruck
+#' * PM.Luftdruck
+#' * TMK.Lufttemperatur (default)
+#' * UPM.Relative_Feuchte
+#' * TXK.Lufttemperatur_Max
+#' * TNK.Lufttemperatur_Min
+#' * TGK.Lufttemperatur_5cm_min
+#' * eor
+#'
+#' @return A data frame with daily values for a year.
+get_weather_data <- function(
+    year_to_plot = 2024,
+    station_id = 766,
+    data_type = "TMK.Lufttemperatur") {
+  rdwd::selectDWD(
+    id = station_id,
+    res = "daily",
+    var = "kl",
+    per = "r" # recent only (no historic data - "rh" would be both)
+  ) %>%
+    rdwd::dataDWD(
+      read = TRUE,
+      dir = "DWDdata",
+      varnames = TRUE
+    ) %>%
+    dplyr::filter(lubridate::year(.data$MESS_DATUM) == year_to_plot) %>%
+    dplyr::mutate("day" = as.Date(.data$MESS_DATUM)) %>%
+    dplyr::rename(value = data_type) %>%
+    dplyr::select(.data$day, .data$value) %>%
+    tidyr::complete(
+      day = seq(
+        from = as.Date(paste(year_to_plot, "-01-01", sep = "")),
+        to = as.Date(paste(year_to_plot, "-12-31", sep = "")),
+        by = "day"
+      )
+    )
+}
+
 
 #' Get Monthly Data in Long Format
 #'
@@ -211,10 +300,12 @@ get_hourly_monthly_data_long <- function(power_data) {
 #' )
 #' pivot_longer_data(power_data)
 #' @export
-pivot_longer_data <- function(power_data) {
+pivot_longer_data <- function(
+    power_data,
+    cols = c("total_input", "total_output")) {
   tidyr::pivot_longer(
     data = power_data,
-    cols = c("total_input", "total_output"),
+    cols = cols,
     names_to = "type",
     values_to = "value"
   )
@@ -295,12 +386,16 @@ get_data_for_plot_type <- function(plot_type, power_data) {
     get_yearly_data_long(power_data)
   } else if (startsWith(plot_type, "by month")) {
     get_monthly_data_long(power_data)
+  } else if (startsWith(plot_type, "by weekday")) {
+    get_weekday_data_long(power_data)
   } else if (startsWith(plot_type, "by day")) {
     get_daily_data_long(power_data)
   } else if (startsWith(plot_type, "by hour per year")) {
     get_hourly_data_long(power_data)
   } else if (startsWith(plot_type, "by hour per month")) {
     get_hourly_monthly_data_long(power_data)
+  } else if (startsWith(plot_type, "by hour type")) {
+    get_octopus_heat_data_long(power_data)
   } else {
     power_data
   }

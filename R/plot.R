@@ -11,13 +11,20 @@ plot_map <- data.frame(
     "by year (bars)" = "plot_by_year_bars",
     "by month (bars)" = "plot_by_month_bars",
     "by day per year (heatmap)" = "plot_by_day_per_year_calendar_heatmap",
+    "by day per year (line)" = "plot_by_day_per_year_line",
     "by day per year (top 10, bars)" = "plot_by_day_per_year_top_10_bars",
     "by hour per year (bars)" = "plot_by_hour_per_year_bars",
     "by hour per month (bars)" = "plot_by_hour_per_month_bars",
     "by hour per month (heatmap)" = "plot_by_hour_per_month_heatmap",
     "by hour per month (lines)" = "plot_by_hour_per_month_lines",
-    "by hour per month (ridgelines)" = "plot_by_hour_per_month_ridgelines",
-    "by hour per month (stacked areas)" = "plot_by_hour_per_month_stacked_areas"
+    "by hour per month (ridgelines)" =
+      "plot_by_hour_per_month_ridgelines",
+    "by hour per month (stacked areas)" =
+      "plot_by_hour_per_month_stacked_areas",
+    "by hour type" =
+      "plot_by_hour_type_bars",
+    "by weekday" =
+      "plot_by_weekday_bars"
   )
 )
 
@@ -63,18 +70,25 @@ plot <- function(
 get_theme <- function(display_mode) {
   if (display_mode == "dark") {
     ggdark::dark_theme_light(base_size = 20) +
-      theme(plot.background = element_rect(
-        fill = dark_background_color, colour = dark_background_color
-      )) +
-      theme(panel.background = element_rect(
-        fill = dark_background_color, colour = dark_background_color
-      )) +
-      theme(legend.background = element_rect(
-        fill = dark_background_color, colour = dark_background_color
-      )) + theme(strip.background = element_rect(fill = strip_color))
+      ggplot2::theme(
+        plot.background = ggplot2::element_rect(
+          fill = dark_background_color, colour = dark_background_color
+        ),
+        panel.background = ggplot2::element_rect(
+          fill = dark_background_color, colour = dark_background_color
+        ),
+        legend.background = ggplot2::element_rect(
+          fill = dark_background_color, colour = dark_background_color
+        ),
+        strip.background = ggplot2::element_rect(fill = strip_color),
+        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
+      )
   } else {
     ggplot2::theme_light(base_size = 20) +
-      theme(strip.background = element_rect(fill = strip_color))
+      ggplot2::theme(
+        strip.background = ggplot2::element_rect(fill = strip_color),
+        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
+      )
   }
 }
 
@@ -82,6 +96,73 @@ get_theme <- function(display_mode) {
 # implement new plot functions below and add them
 # to the list above to have them appear in the ui
 ##################################################
+
+#' Plot Data as line chart
+#'
+#' Generates a line plot showing input and output data.
+#'
+#' @param power_data data frame with `timestamp`, `INPUT`, and `OUTPUT` columns.
+#' @param year_to_plot year for which to plot the dataframe.
+#' @param display_mode decides whether to plot dark or light.
+#' @return A ggplot object showing yearly aggregated values.
+#' @importFrom rlang .data
+#' @examples
+#' # Example using a small sample data frame
+#' power_data <- data.frame(
+#'   timestamp = c(
+#'     as.POSIXct("2000-01-01 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-01-02 01:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-01 02:00:00", tz = "UTC"),
+#'     as.POSIXct("2000-02-02 02:00:00", tz = "UTC")
+#'   ),
+#'   INPUT = c(1.0, 2.0, 3.0, 4.0),
+#'   OUTPUT = c(4.0, 3.0, 2.0, 1.0)
+#' )
+#' plot_by_day_per_year_line(power_data)
+#' @export
+plot_by_day_per_year_line <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  temp <- i18n$t("temperature (°C)")
+  weather_data <- get_weather_data(year_to_plot = year_to_plot)
+  p_data <- power_data %>%
+    get_daily_data_long(year_to_plot = year_to_plot)
+  ggplot2::ggplot(data = p_data) +
+    ggplot2::geom_line(
+      ggplot2::aes(x = .data$day, y = .data$value, color = .data$type)
+    ) +
+    ggplot2::labs(
+      title = i18n$t("by day per year (line)"),
+      x = i18n$t("time"),
+      y = i18n$t("sum of values (kWh)"),
+      color = i18n$t("type")
+    ) +
+    ggplot2::geom_line(
+      data = weather_data,
+      ggplot2::aes(
+        x = .data$day,
+        y = .data$value * 2,
+        color = temp
+      )
+    ) +
+    ggplot2::scale_y_continuous(
+      name = i18n$t("sum of values (kWh)"),
+      sec.axis = ggplot2::sec_axis(~ . / 2, name = temp)
+    ) +
+    ggplot2::scale_x_date(
+      date_breaks = "1 month",
+      date_labels = "%b",
+      minor_breaks = "1 day"
+    ) +
+    ggplot2::scale_color_manual(
+      values = setNames(
+        c(input_color, output_color, "green"),
+        c("total_input", "total_output", temp)
+      )
+    )
+}
+
 
 #' Plot Aggregated Data by Year
 #'
@@ -122,7 +203,6 @@ plot_by_year_bars <- function(
       y = i18n$t("sum of values (kWh)"),
       fill = i18n$t("type")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
     ) +
@@ -173,7 +253,6 @@ plot_by_month_bars <- function(
       y = i18n$t("sum of values (kWh)"),
       fill = i18n$t("type")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
     )
@@ -218,11 +297,40 @@ plot_by_hour_per_year_bars <- function(
       y = i18n$t("sum of values (kWh)"),
       fill = i18n$t("type")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
     )
 }
+
+
+plot_by_hour_type_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  power_data %>%
+    get_octopus_heat_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$htype, y = .data$value, fill = .data$type)
+    ) +
+    ggplot2::geom_bar(stat = "identity", position = "dodge") +
+    ggplot2::labs(
+      title = i18n$t("by hour type (bars)"),
+      x = i18n$t("htype"),
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c("total_input" = input_color, "total_output" = output_color)
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(label = round(.data$value, digits = 0)),
+      vjust = 1.5,
+      position = ggplot2::position_dodge(.9),
+      colour = "black"
+    )
+}
+
+
 
 #' Plot Hourly Data by Month
 #'
@@ -264,7 +372,6 @@ plot_by_hour_per_month_bars <- function(
       y = i18n$t("sum of values (kWh)"),
       fill = i18n$t("type")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
     )
@@ -310,8 +417,7 @@ plot_by_hour_per_month_heatmap <- function(
       x = i18n$t("hour"),
       y = i18n$t("month"),
       fill = i18n$t("sum of values (kWh)")
-    ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    )
 }
 
 #' Generate a Ridgeline Plot of Hourly Data by Month
@@ -358,7 +464,6 @@ plot_by_hour_per_month_ridgelines <- function(
       y = i18n$t("month"),
       fill = i18n$t("type")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c("total_input" = input_color, "total_output" = output_color)
     ) +
@@ -410,7 +515,6 @@ plot_by_hour_per_month_stacked_areas <- function(
       y = i18n$t("sum of values (kWh)"),
       fill = i18n$t("month")
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_viridis_d() # Use a color gradient to distinguish months
 }
 
@@ -458,8 +562,7 @@ plot_by_hour_per_month_lines <- function(
       x = i18n$t("hour"),
       y = i18n$t("sum of values (kWh)"),
       color = i18n$t("month")
-    ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    )
 }
 
 #' Generate a Bar Chart of top 10 days of power input vs output
@@ -628,7 +731,6 @@ plot_by_day_per_year_top_10_bars <- function(
       label = paste("10", i18n$t("th percentile")),
       vjust = -1, hjust = 0
     ) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
     ggplot2::scale_fill_manual(
       values = c(input_color, output_color), guide = "none"
     )
@@ -711,4 +813,25 @@ plot_by_day_per_year_calendar_heatmap <- function(
       )
     )
   })
+}
+
+plot_by_weekday_bars <- function(
+    power_data,
+    year_to_plot = 2024,
+    display_mode = "dark") {
+  power_data %>%
+    get_weekday_data_long() %>%
+    ggplot2::ggplot(
+      ggplot2::aes(x = .data$weekday, y = .data$value, fill = .data$type)
+    ) +
+    ggplot2::geom_bar(stat = "identity", position = "dodge") +
+    ggplot2::labs(
+      title = i18n$t("by weekday (bars)"),
+      x = i18n$t("weekday"),
+      y = i18n$t("sum of values (kWh)"),
+      fill = i18n$t("type")
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c("total_input" = input_color, "total_output" = output_color)
+    )
 }

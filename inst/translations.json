@@ -143,6 +143,46 @@
         {
             "en": "en_US.UTF-8",
             "de": "de_DE.UTF-8"
+        },
+        {
+            "en": "time",
+            "de": "Zeit"
+        },
+        {
+            "en": "values (kWh)",
+            "de": "Werte (kWh)"
+        },
+        {
+            "en": "by day per year (line)",
+            "de": "nach Tag pro Jahr (Linie)"
+        },
+        {
+            "en": "Weather",
+            "de": "Wetter"
+        },
+        {
+            "en": "temperature (°C)",
+            "de": "Temperatur (°C)"
+        },
+        {
+            "en": "by weekday",
+            "de": "nach Wochentag"
+        },
+        {
+            "en": "by weekday (bars)",
+            "de": "nach Wochentag (Balken)"
+        },
+        {
+            "en": "weekday",
+            "de": "Wochentag"
+        },
+        {
+            "en": "by hour type",
+            "de": "nach Stundentyp"
+        },
+        {
+            "en": "htype",
+            "de": "Stundentyp"
         }
     ]
 }

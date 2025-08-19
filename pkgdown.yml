@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-07-18T07:07Z
+last_built: 2025-08-19T19:41Z
 urls:
   reference: https://joergsesterhenn.github.io/medaco-plot/reference
   article: https://joergsesterhenn.github.io/medaco-plot/articles
